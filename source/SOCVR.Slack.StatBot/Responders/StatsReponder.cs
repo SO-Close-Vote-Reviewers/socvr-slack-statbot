@@ -53,22 +53,43 @@ namespace SOCVR.Slack.StatBot.Responders
             //get all the messages in chat
             var chatMessages = cs.GetMessagesForDate(date, startHour, endHour);
 
-            var messagesGroupByUser = chatMessages.GroupBy(x => x.UserName);
+            //just for now
+            var returnMessage = GetStarData(chatMessages);
 
-            var totalCountMessage = "```" + messagesGroupByUser
-                .Select(x => new
-                {
-                    UserName = x.Key,
-                    Count = x.Count()
-                })
-                .OrderByDescending(x => x.Count)
-                .Select(x => "{0} - {1}".FormatInline(x.UserName, x.Count))
-                .ToCSV("\n") + "```";
+            //var totalCountMessage = "```" + messagesGroupByUser
+            //    .Select(x => new
+            //    {
+            //        UserName = x.Key,
+            //        Count = x.Count()
+            //    })
+            //    .OrderByDescending(x => x.Count)
+            //    .Select(x => "{0} - {1}".FormatInline(x.UserName, x.Count))
+            //    .ToCSV("\n") + "```";
 
             return new MargieBot.Models.BotMessage()
             {
-                Text = totalCountMessage
+                Text = returnMessage
             };
+        }
+
+        private string GetStarData(List<ChatMessageInfo> messages)
+        {
+            var data = messages
+                .GroupBy(x => x.UserName)
+                .Select(x => new
+                {
+                    UserName = x.Key,
+                    StarredMessages = x.Count(m => m.StarCount > 0),
+                    TotalStars = x.Sum(m => m.StarCount)
+                })
+                .Where(x => x.TotalStars > 0)
+                .OrderByDescending(x => x.TotalStars)
+                .ToStringTable(new[] { "Username", "Total Stars", "# Starred Msgs" },
+                    (x) => x.UserName,
+                    (x) => x.TotalStars,
+                    (x) => x.StarredMessages);
+
+            return "```" + data + "```";
         }
 
         private DateTime ExtractDateFromMatch(Match match)
