@@ -13,8 +13,8 @@ namespace SOCVR.Slack.StatBot
     {
         static void Main(string[] args)
         {
-            var scraper = new ChatScraper();
-            scraper.GetMessagesForDate(DateTime.Parse("2015-11-20"));
+            //var scraper = new ChatScraper();
+            //scraper.GetMessagesForDate(DateTime.Parse("2015-11-20"));
 
             var botRunningTask = Task.Run(() => RunBot());
             Task.WaitAll(botRunningTask);
@@ -30,7 +30,8 @@ namespace SOCVR.Slack.StatBot
             var botAPIKey = Environment.GetEnvironmentVariable("SlackBotAPIKey", EnvironmentVariableTarget.User);
             var bot = new Bot();
             bot.Aliases = new List<string>() { "sc" };
-            bot.Responders.Add(new EchoResponder());
+            //bot.Responders.Add(new EchoResponder());
+            bot.Responders.Add(new Responders.StatsReponder());
             await bot.Connect(botAPIKey);
         }
     }

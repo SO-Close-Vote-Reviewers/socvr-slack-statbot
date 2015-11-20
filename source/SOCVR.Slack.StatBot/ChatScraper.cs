@@ -18,11 +18,11 @@ namespace SOCVR.Slack.StatBot
         /// </summary>
         /// <param name="date">The UTC date to fetch data about.</param>
         /// <returns></returns>
-        public List<ChatMessageInfo> GetMessagesForDate(DateTime date)
+        public List<ChatMessageInfo> GetMessagesForDate(DateTime date, int startHour, int endHour)
         {
             var socvrTranscriptUrl = CreateTranscriptUrl(41570, date);
 
-            CQ transcriptHtml = CQ.CreateFromUrl("http://chat.stackoverflow.com/transcript/message/26985780#26985780");
+            CQ transcriptHtml = CQ.CreateFromUrl(socvrTranscriptUrl);
 
             var allMessages = transcriptHtml["#transcript .message"];
 
