@@ -27,7 +27,7 @@ namespace SOCVR.Slack.StatBot
 
         private static async Task RunBot()
         {
-            var botAPIKey = Environment.GetEnvironmentVariable("SlackBotAPIKey", EnvironmentVariableTarget.User);
+            var botAPIKey = SettingsAccessor.GetSetting<string>("SlackBotAPIKey");
             var bot = new Bot();
             bot.Aliases = new List<string>() { "sc" };
             //bot.Responders.Add(new EchoResponder());
