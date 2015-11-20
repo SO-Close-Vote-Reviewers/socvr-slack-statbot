@@ -29,3 +29,5 @@ Unless specified, stat collection will not include messages that have been moved
 | Total  |             76 |     40 |    81 |      8 |        18 |      11 |           36 |
 +--------+----------------+--------+-------+--------+-----------+---------+--------------+
 ```
+
+For `date`, you can type in a date in ISO format (`yyyy-MM-dd`) or use a shortcut ("today", "yesterday", "X days ago").
