@@ -13,9 +13,6 @@ namespace SOCVR.Slack.StatBot
     {
         static void Main(string[] args)
         {
-            //var scraper = new ChatScraper();
-            //scraper.GetMessagesForDate(DateTime.Parse("2015-11-20"));
-
             var botRunningTask = Task.Run(() => RunBot());
             Task.WaitAll(botRunningTask);
                    
