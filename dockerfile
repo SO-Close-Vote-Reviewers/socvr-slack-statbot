@@ -26,10 +26,6 @@ RUN apt-get update && apt-get install -y \
  mono-complete \
  ca-certificates-mono
 
-# after installing nuget it seems the temp folder is owned by root
-# changing this to be editable by everyone
-RUN chmod 777 /tmp/nuget/
-
 # copy in the source folder
 COPY source/ /tmp/source/
 
@@ -37,6 +33,7 @@ COPY source/ /tmp/source/
 RUN \
   nuget restore /tmp/source/SOCVR.Slack.StatBot.sln && \
   xbuild /p:Configuration=Release /tmp/source/SOCVR.Slack.StatBot.sln && \
-  cp -p /tmp/source/SOCVR.Slack.StatBot/bin/Release/* /srv/slackbot/
+  mkdir -p /srv/slackbot && \
+  cp /tmp/source/SOCVR.Slack.StatBot/bin/Release/* /srv/slackbot/
   
 CMD ["mono", "/srv/slackbot/SOCVR.Slack.StatBot.exe"]
