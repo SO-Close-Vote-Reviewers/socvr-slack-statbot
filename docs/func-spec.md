@@ -14,8 +14,6 @@ the user can add a keyword to only show data about a single column:
 - moved - shows how many messages the user has moved to different rooms
 - one-box - shows how many messages the user has posted that are one-boxed (and not images)
 - stars - shows two columns of data: the number of messages the user made that were starred, and the total number of stars that user got in the day.
-- starred - shows only the first column of data from "stars"
-- stars-in - shows only the second column of data from "starts"
 
 Unless specified, stat collection will not include messages that have been moved to other chat rooms.
 

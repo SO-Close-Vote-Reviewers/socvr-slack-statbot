@@ -93,6 +93,10 @@ namespace SOCVR.Slack.StatBot.Responders
                     return new StarsDataFormatter();
                 case "cv-pls":
                     return new CvPlsDataFormatter();
+                case "links":
+                    return new LinksDataFormatter();
+                case "one-box":
+                    return new OneBoxeDataFormatter();
                 default:
                     throw new NotImplementedException();
             }
