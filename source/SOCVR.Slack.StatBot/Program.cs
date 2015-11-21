@@ -1,5 +1,6 @@
 ﻿using MargieBot;
 using MargieBot.Responders;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,23 +14,21 @@ namespace SOCVR.Slack.StatBot
     {
         static void Main(string[] args)
         {
-            var botRunningTask = Task.Run(() => RunBot());
-            Task.WaitAll(botRunningTask);
-                   
-            while(true)
-            {
-                //need to copy how Closey does this
-            }
-        }
-
-        private static async Task RunBot()
-        {
             var botAPIKey = SettingsAccessor.GetSetting<string>("SlackBotAPIKey");
             var bot = new Bot();
             bot.Aliases = new List<string>() { "sc" };
             bot.Responders.Add(new Responders.StatsReponder());
             bot.Responders.Add(new Responders.HelpResponder());
-            await bot.Connect(botAPIKey);
+            bot.Connect(botAPIKey);
+
+            Console.CancelKeyPress += delegate
+            {
+                bot.Disconnect();
+                Console.WriteLine("Got signal to shut down.");
+            };
+
+            while (true) { }
         }
+
     }
 }
