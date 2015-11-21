@@ -38,8 +38,8 @@ namespace SOCVR.Slack.StatBot
                     .Find(".username a")
                     .Text();
 
-                messageEntry.HasLinks = message.Cq().Find(".content").Has("a").Any();
-                messageEntry.IsCloseVoteRequest = false;
+                messageEntry.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(message.Cq().Find(".content"));
+                messageEntry.HasLinks = message.Cq().Find(".content").Has("a").Any() && !messageEntry.IsCloseVoteRequest;
                 messageEntry.IsImage = message.Cq().Find(".content .onebox.ob-image").Any();
                 messageEntry.IsOneBoxed = message.Cq().Find(".content .onebox:not(.ob-image)").Any();
 
@@ -65,6 +65,28 @@ namespace SOCVR.Slack.StatBot
             }
 
             return parsedMessages;
+        }
+
+        private bool DetermineIfMessageIsCloseVoteRequest(CQ messageContentsNode)
+        {
+            //message contains "cv-pls", "cv-plz", or "close", and has a link
+
+            var triggerPhrases = new[]
+            {
+                "cv-pls",
+                "cv-plz",
+                "close"
+            };
+
+            var text = messageContentsNode.Text();
+
+            var hasTriggerPhrase = triggerPhrases
+                .Select(x => text.Contains(x))
+                .Any(x => x);
+
+            var hasLink = messageContentsNode.Find("a").Any();
+
+            return hasTriggerPhrase && hasLink;
         }
 
         private string CreateTranscriptUrl(int roomId, DateTime date)
