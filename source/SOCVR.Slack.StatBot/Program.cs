@@ -1,19 +1,14 @@
 ﻿using MargieBot;
-using MargieBot.Responders;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TCL.Extensions;
+using System.Threading;
 
 namespace SOCVR.Slack.StatBot
 {
     class Program
     {
         static Bot bot = new Bot();
-        static bool gotExitCommand = false;
+        static ManualResetEvent exitMre = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
@@ -28,6 +23,7 @@ namespace SOCVR.Slack.StatBot
             {
                 bot.Disconnect();
                 Console.WriteLine("Got signal to shut down.");
+                exitMre.Set();
             };
 
 #if MONO
@@ -35,7 +31,8 @@ namespace SOCVR.Slack.StatBot
             unixSignalManager.Exit += UnixSignalManager_Exit;
 #endif
 
-            while (!gotExitCommand) { }
+            // Probably best to use waithandles. 
+            exitMre.WaitOne();
         }
 
 #if MONO
@@ -43,7 +40,7 @@ namespace SOCVR.Slack.StatBot
         {
             bot.Disconnect();
             Console.WriteLine("Got exit command from linux.");
-            gotExitCommand = true;
+            exitMre.Set();
         }
 #endif
     }
@@ -61,11 +58,12 @@ namespace SOCVR.Slack.StatBot
     {
         public event EventHandler Exit;
 
-        UnixSignal[] signals = new UnixSignal[]{
-        new UnixSignal(Mono.Unix.Native.Signum.SIGTERM),
-        new UnixSignal(Mono.Unix.Native.Signum.SIGINT),
-        new UnixSignal(Mono.Unix.Native.Signum.SIGUSR1)
-    };
+        var signals = new UnixSignal[]
+        {
+            new UnixSignal(Mono.Unix.Native.Signum.SIGTERM),
+            new UnixSignal(Mono.Unix.Native.Signum.SIGINT),
+            new UnixSignal(Mono.Unix.Native.Signum.SIGUSR1)
+        };
 
         public UnixExitSignal()
         {
@@ -78,10 +76,8 @@ namespace SOCVR.Slack.StatBot
                 {
                     Exit(null, EventArgs.Empty);
                 }
-
             });
         }
-
     }
 #endif
 

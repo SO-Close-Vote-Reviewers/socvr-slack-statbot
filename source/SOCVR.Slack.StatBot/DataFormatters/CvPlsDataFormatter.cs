@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCL.Extensions;
 
 namespace SOCVR.Slack.StatBot.DataFormatters
@@ -21,10 +19,10 @@ namespace SOCVR.Slack.StatBot.DataFormatters
                         "Username",
                         "Close Requests",
                     },
-                    (x) => x.Username,
-                    (x) => x.CloseRequests);
+                    x => x.Username,
+                    x => x.CloseRequests);
 
-            return "```" + dataSection + "```";
+            return $"```{dataSection}```";
         }
 
         protected override string GetHeaderSection(List<UserDayStats> userStats, DateTime date, int startHour, int endHour)

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCL.Extensions;
 
 namespace SOCVR.Slack.StatBot.DataFormatters
@@ -15,7 +13,7 @@ namespace SOCVR.Slack.StatBot.DataFormatters
                 .OrderByDescending(x => x.TotalMessages)
                 .ToList();
 
-            //add in the totals row
+            // Add in the totals row.
             data.Add(new UserDayStats
             {
                 Username = "Total",
@@ -41,16 +39,16 @@ namespace SOCVR.Slack.StatBot.DataFormatters
                         "Starred Msgs",
                         "Stars Gained"
                     },
-                    (x) => x.Username,
-                    (x) => x.TotalMessages,
-                    (x) => x.CloseRequests,
-                    (x) => x.Links,
-                    (x) => x.Images,
-                    (x) => x.OneBoxes,
-                    (x) => x.StarredMessages,
-                    (x) => x.StarsGained);
+                    x => x.Username,
+                    x => x.TotalMessages,
+                    x => x.CloseRequests,
+                    x => x.Links,
+                    x => x.Images,
+                    x => x.OneBoxes,
+                    x => x.StarredMessages,
+                    x => x.StarsGained);
 
-            return "```" + dataSection + "```";
+            return $"```{dataSection}```";
         }
 
         protected override string GetHeaderSection(List<UserDayStats> messages, DateTime date, int startHour, int endHour)

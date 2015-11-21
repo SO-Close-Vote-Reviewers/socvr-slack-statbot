@@ -31,13 +31,11 @@ namespace SOCVR.Slack.StatBot
 
             // Fill table rows
             for (int rowIndex = 1; rowIndex < arrValues.GetLength(0); rowIndex++)
+            for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
             {
-                for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-                {
-                    object value = valueSelectors[colIndex].Invoke(values[rowIndex - 1]);
+                object value = valueSelectors[colIndex].Invoke(values[rowIndex - 1]);
 
-                    arrValues[rowIndex, colIndex] = value != null ? value.ToString() : "null";
-                }
+                arrValues[rowIndex, colIndex] = value?.ToString() ?? "null";
             }
 
             return ToStringTable(arrValues);
@@ -79,16 +77,14 @@ namespace SOCVR.Slack.StatBot
         {
             var maxColumnsWidth = new int[arrValues.GetLength(1)];
             for (int colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
+            for (int rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
             {
-                for (int rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
-                {
-                    int newLength = arrValues[rowIndex, colIndex].Length;
-                    int oldLength = maxColumnsWidth[colIndex];
+                int newLength = arrValues[rowIndex, colIndex].Length;
+                int oldLength = maxColumnsWidth[colIndex];
 
-                    if (newLength > oldLength)
-                    {
-                        maxColumnsWidth[colIndex] = newLength;
-                    }
+                if (newLength > oldLength)
+                {
+                    maxColumnsWidth[colIndex] = newLength;
                 }
             }
 

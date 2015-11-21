@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCL.Extensions;
 
 namespace SOCVR.Slack.StatBot
@@ -10,9 +7,9 @@ namespace SOCVR.Slack.StatBot
     static class SettingsAccessor
     {
         /// <summary>
-        /// Fetches the setting that is specifed by the Key.
+        /// Fetches the setting that is specified by the Key.
         /// First tries to get the value from an environment variable.
-        /// If it doesn't exist, tries to get the value from the the command line arguments.
+        /// If it doesn't exist, tries to get the value from the command line arguments.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
