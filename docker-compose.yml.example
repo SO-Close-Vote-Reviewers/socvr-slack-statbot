@@ -1,0 +1,5 @@
+
+bot:
+  image: socvr/statbot
+  environment:
+    - SlackBotAPIKey=<slack api key>
