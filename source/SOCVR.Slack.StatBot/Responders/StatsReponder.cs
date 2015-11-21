@@ -91,6 +91,8 @@ namespace SOCVR.Slack.StatBot.Responders
                     return new TotalsDataFormatter();
                 case "stars":
                     return new StarsDataFormatter();
+                case "cv-pls":
+                    return new CvPlsDataFormatter();
                 default:
                     throw new NotImplementedException();
             }

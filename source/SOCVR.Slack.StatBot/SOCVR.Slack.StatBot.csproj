@@ -69,6 +69,7 @@
     <Compile Include="ChatMessageInfo.cs" />
     <Compile Include="ChatScraper.cs" />
     <Compile Include="DataFormatters\BaseDataFormatter.cs" />
+    <Compile Include="DataFormatters\CvPlsDataFormatter.cs" />
     <Compile Include="DataFormatters\FullTableDataFormatter.cs" />
     <Compile Include="DataFormatters\StarsDataFormatter.cs" />
     <Compile Include="DataFormatters\TotalsDataFormatter.cs" />
