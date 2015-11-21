@@ -32,7 +32,7 @@ COPY source/ /tmp/source/
 # compile it and copy the output to the /var/slackbot directory
 RUN \
   nuget restore /tmp/source/SOCVR.Slack.StatBot.sln && \
-  xbuild /p:Configuration=Release /tmp/source/SOCVR.Slack.StatBot.sln && \
+  xbuild /p:Configuration=Mono /tmp/source/SOCVR.Slack.StatBot.sln && \
   mkdir -p /srv/slackbot && \
   cp /tmp/source/SOCVR.Slack.StatBot/bin/Release/* /srv/slackbot/
   
