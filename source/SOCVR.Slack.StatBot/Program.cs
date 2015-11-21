@@ -28,6 +28,7 @@ namespace SOCVR.Slack.StatBot
             var bot = new Bot();
             bot.Aliases = new List<string>() { "sc" };
             bot.Responders.Add(new Responders.StatsReponder());
+            bot.Responders.Add(new Responders.HelpResponder());
             await bot.Connect(botAPIKey);
         }
     }
