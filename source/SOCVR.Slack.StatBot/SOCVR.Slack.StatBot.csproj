@@ -70,6 +70,8 @@
     <Compile Include="ChatScraper.cs" />
     <Compile Include="DataFormatters\BaseDataFormatter.cs" />
     <Compile Include="DataFormatters\FullTableDataFormatter.cs" />
+    <Compile Include="DataFormatters\StarsDataFormatter.cs" />
+    <Compile Include="DataFormatters\TotalsDataFormatter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responders\StatsReponder.cs" />

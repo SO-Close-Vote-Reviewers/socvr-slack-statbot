@@ -38,8 +38,8 @@ namespace SOCVR.Slack.StatBot.Responders
             var match = commandPattern.Match(context.Message.Text.ToLower());
 
             var filter = match.Groups[2].Value;
-            var startHourRaw = match.Groups[5].Value;
-            var endHourRaw = match.Groups[6].Value;
+            var startHourRaw = match.Groups[8].Value;
+            var endHourRaw = match.Groups[9].Value;
 
             DateTime date = ExtractDateFromMatch(match);
 
@@ -87,7 +87,10 @@ namespace SOCVR.Slack.StatBot.Responders
             {
                 case "":
                     return new FullTableDataFormatter();
-
+                case "totals":
+                    return new TotalsDataFormatter();
+                case "stars":
+                    return new StarsDataFormatter();
                 default:
                     throw new NotImplementedException();
             }
