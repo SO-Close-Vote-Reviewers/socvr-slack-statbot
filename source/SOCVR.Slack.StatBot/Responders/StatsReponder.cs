@@ -1,4 +1,5 @@
 ﻿using MargieBot.Responders;
+using SOCVR.Slack.StatBot.DataFormatters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,23 +54,43 @@ namespace SOCVR.Slack.StatBot.Responders
             //get all the messages in chat
             var chatMessages = cs.GetMessagesForDate(date, startHour, endHour);
 
-            //just for now
-            var returnMessage = GetStarData(chatMessages);
+            //group by user and calculate results
+            var userStats = chatMessages
+                .GroupBy(x => x.UserName)
+                .Select(x => new UserDayStats
+                {
+                    Username = x.Key,
+                    TotalMessages = x.Count(),
+                    CloseRequests = x.Count(m => m.IsCloseVoteRequest),
+                    Links = x.Count(m => m.HasLinks),
+                    Images = x.Count(m => m.IsImage),
+                    OneBoxes = x.Count(m => m.IsOneBoxed),
+                    StarredMessages = x.Count(m => m.StarCount > 0),
+                    StarsGained = x.Sum(m => m.StarCount)
+                })
+                .ToList();
 
-            //var totalCountMessage = "```" + messagesGroupByUser
-            //    .Select(x => new
-            //    {
-            //        UserName = x.Key,
-            //        Count = x.Count()
-            //    })
-            //    .OrderByDescending(x => x.Count)
-            //    .Select(x => "{0} - {1}".FormatInline(x.UserName, x.Count))
-            //    .ToCSV("\n") + "```";
+            //depending on the filter, choose the correct data formatter
+
+            var dataFormatter = DetermineDataFormatter(filter);
+            var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, date, startHour, endHour);
 
             return new MargieBot.Models.BotMessage()
             {
-                Text = returnMessage
+                Text = returnMessage,
             };
+        }
+
+        private BaseDataFormatter DetermineDataFormatter(string filter)
+        {
+            switch (filter)
+            {
+                case "":
+                    return new FullTableDataFormatter();
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         private string GetStarData(List<ChatMessageInfo> messages)
