@@ -29,6 +29,8 @@ RUN apt-get update && apt-get install -y \
 # copy in the source folder
 COPY source/ /tmp/source/
 
+COPY run.sh /run.sh
+
 # compile it and copy the output to the /var/slackbot directory
 RUN \
   nuget restore /tmp/source/SOCVR.Slack.StatBot.sln && \
@@ -36,4 +38,4 @@ RUN \
   mkdir -p /srv/slackbot && \
   cp /tmp/source/SOCVR.Slack.StatBot/bin/Release/* /srv/slackbot/
   
-CMD ["mono", "/srv/slackbot/SOCVR.Slack.StatBot.exe"]
+CMD ["run.sh"]
