@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCL.Extensions;
 
 namespace SOCVR.Slack.StatBot
@@ -47,17 +45,17 @@ namespace SOCVR.Slack.StatBot
 
                 if (starContainer.Any())
                 {
-                    //there is at least one star on the message
+                    // There is at least one star on the message.
                     var rawStarCount = starContainer.Find(".times").Text();
 
-                    //if it's an empty string then the count is one. Else parse the number
+                    // If it's an empty string then the count is one. Else parse the number.
                     messageEntry.StarCount = rawStarCount == ""
                         ? 1
                         : rawStarCount.Parse<int>();
                 }
                 else
                 {
-                    //there are no stars
+                    // There are no stars.
                     messageEntry.StarCount = 0;
                 }
 
@@ -96,9 +94,9 @@ namespace SOCVR.Slack.StatBot
 
         private string CreateTranscriptUrl(int roomId, DateTime date, int startHour, int endHour)
         {
-            //do some error checking
+            // Do some error checking.
 
-            //date given is in the future
+            // Date given is in the future.
             if (date.Date > DateTimeOffset.UtcNow.Date)
             {
                 throw new ArgumentException("Date is in the future.");
@@ -106,7 +104,7 @@ namespace SOCVR.Slack.StatBot
 
             if (startHour > endHour)
             {
-                throw new ArgumentException("Start hour is after the end hour");
+                throw new ArgumentException("Start hour is after the end hour.");
             }
 
             var baseUrl = new Uri("http://chat.stackoverflow.com/transcript/");
@@ -123,7 +121,7 @@ namespace SOCVR.Slack.StatBot
             var url = new Uri(baseUrl, roomAndDateSection);
 
             //add in the start and end time info
-            url = new Uri(url, "{0}-{1}".FormatInline(startHour, endHour));
+            url = new Uri(url, $"{startHour}-{endHour}");
             return url.ToString();
         }
     }

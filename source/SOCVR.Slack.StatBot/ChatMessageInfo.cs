@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SOCVR.Slack.StatBot
+﻿namespace SOCVR.Slack.StatBot
 {
     /// <summary>
     /// Holds summary info about a chat message

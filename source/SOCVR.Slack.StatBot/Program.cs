@@ -1,19 +1,14 @@
 ﻿using MargieBot;
-using MargieBot.Responders;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TCL.Extensions;
+using System.Threading;
 
 namespace SOCVR.Slack.StatBot
 {
     class Program
     {
         static Bot bot = new Bot();
-        static bool gotExitCommand = false;
+        static ManualResetEvent exitMre = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
@@ -28,9 +23,11 @@ namespace SOCVR.Slack.StatBot
             {
                 bot.Disconnect();
                 Console.WriteLine("Got signal to shut down.");
+                exitMre.Set();
             };
 
-            while (!gotExitCommand) { }
+            // Probably best to use waithandles. 
+            exitMre.WaitOne();
         }
 
     }

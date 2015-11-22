@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TCL.Extensions;
 
 namespace SOCVR.Slack.StatBot.DataFormatters
 {
-    class OneBoxeDataFormatter :BaseDataFormatter
+    class OneBoxeDataFormatter : BaseDataFormatter
     {
         protected override string GetDataSection(List<UserDayStats> userStats)
         {
@@ -21,10 +19,10 @@ namespace SOCVR.Slack.StatBot.DataFormatters
                         "Username",
                         "One-Boxed Messages",
                     },
-                    (x) => x.Username,
-                    (x) => x.OneBoxes);
+                    x => x.Username,
+                    x => x.OneBoxes);
 
-            return "```" + dataSection + "```";
+            return $"```{dataSection}```";
         }
 
         protected override string GetHeaderSection(List<UserDayStats> userStats, DateTime date, int startHour, int endHour)

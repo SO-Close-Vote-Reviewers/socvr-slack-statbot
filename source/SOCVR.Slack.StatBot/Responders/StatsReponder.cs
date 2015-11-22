@@ -1,11 +1,8 @@
 ﻿using MargieBot.Responders;
 using SOCVR.Slack.StatBot.DataFormatters;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TCL.Extensions;
 
 namespace SOCVR.Slack.StatBot.Responders
@@ -15,21 +12,21 @@ namespace SOCVR.Slack.StatBot.Responders
         //let's explain the pattern:
 
         /*
-         *                                 the command you are running
-                                           |     the user can add a filter to only return a particular column. This is optional.
-                                           |     |                                                               the date the user wants data for. Can type in an ISO format,
-                                           |     |                                                               or you can use "today", "yesterday", or "X days ago"
-                                           |     |                                                               |                                                           The time range for the messages. Optional.*/
-        Regex commandPattern = new Regex(@"stats (?:(totals|cv-pls|links|moved|one-box|stars|starred|stars-in) )?((\d{4})-(\d{2})-(\d{2})|today|yesterday|(\d+) days ago)(?: (\d{1,2})-(\d{1,2}))?", RegexOptions.IgnoreCase);
+         *                                     the command you are running
+                                               |     the user can add a filter to only return a particular column. This is optional.
+                                               |     |                                                               the date the user wants data for. Can type in an ISO format,
+                                               |     |                                                               or you can use "today", "yesterday", or "X days ago"
+                                               |     |                                                               |                                                           The time range for the messages. Optional.*/
+        Regex commandPattern = new Regex(@"(?i)stats (?:(totals|cv-pls|links|moved|one-box|stars|starred|stars-in) )?((\d{4})-(\d{2})-(\d{2})|today|yesterday|(\d+) days ago)(?: (\d{1,2})-(\d{1,2}))?", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         ChatScraper cs = new ChatScraper();
 
         public bool CanRespond(MargieBot.Models.ResponseContext context)
         {
             return
-                commandPattern.IsMatch(context.Message.Text) && //must match command regex
-                !context.Message.User.IsSlackbot && //message must be said by a non-bot
-                context.Message.MentionsBot; //message must mention the bot
+                commandPattern.IsMatch(context.Message.Text) && //  Must match command regex.
+                !context.Message.User.IsSlackbot && // Message must be said by a non-bot.
+                context.Message.MentionsBot; // Message must mention the bot.
         }
 
         public MargieBot.Models.BotMessage GetResponse(MargieBot.Models.ResponseContext context)
@@ -50,10 +47,10 @@ namespace SOCVR.Slack.StatBot.Responders
                 ? endHourRaw.Parse<int>()
                 : 24;
 
-            //get all the messages in chat
+            // Get all the messages in chat.
             var chatMessages = cs.GetMessagesForDate(date, startHour, endHour);
 
-            //group by user and calculate results
+            // Group by user and calculate results.
             var userStats = chatMessages
                 .GroupBy(x => x.UserName)
                 .Select(x => new UserDayStats
@@ -69,7 +66,7 @@ namespace SOCVR.Slack.StatBot.Responders
                 })
                 .ToList();
 
-            //depending on the filter, choose the correct data formatter
+            // Depending on the filter, choose the correct data formatter.
 
             var dataFormatter = DetermineDataFormatter(filter);
             var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, date, startHour, endHour);
@@ -103,14 +100,14 @@ namespace SOCVR.Slack.StatBot.Responders
 
         private DateTime ExtractDateFromMatch(Match match)
         {
-            /* the date is in one of the following formats:
+            /* The date is in one of the following formats:
              * 
              * direct - "yyyy-MM-dd"
              * single word - "today", "yesterday"
              * relative - "X days ago"
              */
 
-            //if group 3 (direct year) is used then it's in the direct format
+            // If group 3 (direct year) is used then it's in the direct format.
             if (match.Groups[3].Success)
             {
                 var year = match.Groups[3].Value.Parse<int>();
@@ -118,23 +115,23 @@ namespace SOCVR.Slack.StatBot.Responders
                 var day = match.Groups[5].Value.Parse<int>();
                 return new DateTime(year, month, day);
             }
-            //else, if group 6 (X days ago) is used then it's relative format
+            // Else, if group 6 (X days ago) is used then it's relative format.
             else if (match.Groups[6].Success)
             {
                 var daysAgo = match.Groups[7].Value.Parse<int>();
                 return DateTime.UtcNow.Date.AddDays(-daysAgo);
             }
-            //else, it's either "today" or "yesterday" in group 2. Check "today" first
+            // Else, it's either "today" or "yesterday" in group 2. Check "today" first.
             else if (match.Groups[2].Value == "today")
             {
                 return DateTime.UtcNow.Date;
             }
-            //else, try "yesterday"
+            // Else, try "yesterday".
             else if (match.Groups[2].Value == "yesterday")
             {
                 return DateTime.UtcNow.Date.AddDays(-1);
             }
-            //if none of the above were it, something weird happened.
+            // If none of the above were it, something weird happened.
             else
             {
                 throw new Exception("Unable to determine requested date.");
