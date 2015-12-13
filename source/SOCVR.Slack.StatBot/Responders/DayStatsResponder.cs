@@ -5,19 +5,91 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MargieBot.Models;
+using System.Text.RegularExpressions;
+using SOCVR.Slack.StatBot.CommandSettings;
+using SOCVR.Slack.StatBot.DataFormatters;
 
 namespace SOCVR.Slack.StatBot.Responders
 {
     class DayStatsResponder : IResponder
     {
+        Regex commandPattern = new Regex(DayStatsSettings.CommandPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+        ChatScraper cs = new ChatScraper();
+
         public bool CanRespond(ResponseContext context)
         {
-            throw new NotImplementedException();
+            return
+                commandPattern.IsMatch(context.Message.Text) && //  Must match command regex.
+                !context.Message.User.IsSlackbot && // Message must be said by a non-bot.
+                context.Message.MentionsBot; // Message must mention the bot.
         }
 
         public BotMessage GetResponse(ResponseContext context)
         {
-            throw new NotImplementedException();
+            DayStatsSettings settings;
+
+            try
+            {
+                settings = new DayStatsSettings(context.Message.Text);
+            }
+            catch (Exception ex)
+            {
+                return new BotMessage()
+                {
+                    Text = $"Invalid command settings: {ex.Message}"
+                };
+            }
+
+            // Get all the messages in chat.
+            var chatMessages = cs.GetMessagesForDate(settings.Date, settings.StartHour, settings.EndHour);
+
+            // Group by user and calculate results.
+            var userStats = chatMessages
+                .GroupBy(x => x.UserName)
+                .Select(x => new UserDayStats
+                {
+                    Username = x.Key,
+                    TotalMessages = x.Count(),
+                    CloseRequests = x.Count(m => m.IsCloseVoteRequest),
+                    Links = x.Count(m => m.HasLinks),
+                    Images = x.Count(m => m.IsImage),
+                    OneBoxes = x.Count(m => m.IsOneBoxed),
+                    StarredMessages = x.Count(m => m.StarCount > 0),
+                    StarsGained = x.Sum(m => m.StarCount)
+                })
+                .ToList();
+
+            // Depending on the filter, choose the correct data formatter.
+
+            var dataFormatter = DetermineDataFormatter(settings.Filter);
+            var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, settings.Date, settings.StartHour, settings.EndHour, settings.OutputType);
+
+            return new BotMessage()
+            {
+                Text = returnMessage,
+            };
+        }
+
+        private BaseDataFormatter DetermineDataFormatter(string filter)
+        {
+            switch (filter)
+            {
+                case "":
+                    return new FullTableDataFormatter();
+                case "totals":
+                    return new TotalsDataFormatter();
+                case "stars":
+                    return new StarsDataFormatter();
+                case "cv-pls":
+                    return new CvPlsDataFormatter();
+                case "links":
+                    return new LinksDataFormatter();
+                case "one-box":
+                    return new OneBoxeDataFormatter();
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SOCVR.Slack.StatBot</RootNamespace>
     <AssemblyName>SOCVR.Slack.StatBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -44,8 +44,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bazam, Version=3.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bazam.3.0.7\lib\net46\Bazam.dll</HintPath>
+    <Reference Include="Bazam, Version=2.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bazam.2.6.2.0\lib\net45\Bazam.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CsQuery, Version=1.3.3.249, Culture=neutral, processorArchitecture=MSIL">
@@ -79,6 +79,9 @@
   <ItemGroup>
     <Compile Include="ChatMessageInfo.cs" />
     <Compile Include="ChatScraper.cs" />
+    <Compile Include="CommandSettings\CommandSettings.cs" />
+    <Compile Include="CommandSettings\DayStatsSettings.cs" />
+    <Compile Include="CommandSettings\RangeStatsSettings.cs" />
     <Compile Include="DataFormatters\BaseDataFormatter.cs" />
     <Compile Include="DataFormatters\CvPlsDataFormatter.cs" />
     <Compile Include="DataFormatters\FullTableDataFormatter.cs" />
@@ -91,7 +94,6 @@
     <Compile Include="Responders\DateRangeStatsResponder.cs" />
     <Compile Include="Responders\DayStatsResponder.cs" />
     <Compile Include="Responders\HelpResponder.cs" />
-    <Compile Include="Responders\StatsReponder.cs" />
     <Compile Include="SettingsAccessor.cs" />
     <Compile Include="TableParser.cs" />
     <Compile Include="UserDayStats.cs" />

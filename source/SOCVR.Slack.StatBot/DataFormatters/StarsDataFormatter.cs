@@ -7,7 +7,7 @@ namespace SOCVR.Slack.StatBot.DataFormatters
 {
     class StarsDataFormatter : BaseDataFormatter
     {
-        protected override string GetDataSection(List<UserDayStats> userStats)
+        protected override string GetDataTable(List<UserDayStats> userStats)
         {
             var dataSection = userStats
                 .OrderByDescending(x => x.StarsGained)

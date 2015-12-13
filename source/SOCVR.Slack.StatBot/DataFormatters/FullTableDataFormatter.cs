@@ -7,7 +7,7 @@ namespace SOCVR.Slack.StatBot.DataFormatters
 {
     class FullTableDataFormatter : BaseDataFormatter
     {
-        protected override string GetDataSection(List<UserDayStats> userStats)
+        protected override string GetDataTable(List<UserDayStats> userStats)
         {
             var data = userStats
                 .OrderByDescending(x => x.TotalMessages)

@@ -7,7 +7,7 @@ namespace SOCVR.Slack.StatBot.DataFormatters
 {
     class CvPlsDataFormatter : BaseDataFormatter
     {
-        protected override string GetDataSection(List<UserDayStats> userStats)
+        protected override string GetDataTable(List<UserDayStats> userStats)
         {
             var dataSection = userStats
                 .Where(x => x.CloseRequests > 0)

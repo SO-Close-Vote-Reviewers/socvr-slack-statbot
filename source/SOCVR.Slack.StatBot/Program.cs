@@ -15,7 +15,7 @@ namespace SOCVR.Slack.StatBot
             var botAPIKey = SettingsAccessor.GetSetting<string>("SlackBotAPIKey");
 
             bot.Aliases = new List<string>() { "sc" };
-            bot.Responders.Add(new Responders.StatsReponder());
+            bot.Responders.Add(new Responders.DayStatsResponder());
             bot.Responders.Add(new Responders.HelpResponder());
             bot.Connect(botAPIKey);
 
@@ -26,7 +26,6 @@ namespace SOCVR.Slack.StatBot
                 exitMre.Set();
             };
 
-            // Probably best to use waithandles. 
             exitMre.WaitOne();
         }
 
