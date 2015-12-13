@@ -19,13 +19,7 @@ namespace SOCVR.Slack.StatBot.Responders
             {
                 Text = @"SOCVR Stat Slackbot, developed by gunr2171. Usage is as follows:
 ```sc stats [filter] <date> [hourStart-hourEnd]```
-`Filter` is optional. Leave out to show the summary table, or choose from one of the following:
-• totals
-• cv-pls
-• links
-• moved
-• one-box
-• stars
+`Filter` is optional. Leave out to show the summary table, or choose from one of the following: totals, cv-pls, links, moved, one-box, stars
 `Date` can be an ISO format date (`yyyy-MM-dd`), 'today', 'yesterday', or 'X days ago'.
 The hour can be specified, use numbers 0-24."
             };
