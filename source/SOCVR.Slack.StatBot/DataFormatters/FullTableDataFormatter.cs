@@ -53,8 +53,24 @@ namespace SOCVR.Slack.StatBot.DataFormatters
 
         protected override string GetHeaderSection(List<UserDayStats> messages, DateTime date, int startHour, int endHour)
         {
-            return "Showing summary information of all posts on {0} between {1} and {2} hours."
-                .FormatInline(date.ToString("yyyy-MM-dd"), startHour, endHour);
+            var totalMessages = messages.Sum(x=>x.TotalMessages);
+            var cvplsTotals = messages.Sum(x => x.CloseRequests);
+            var linkTotals = messages.Sum(x => x.Links);
+            var imageTotals = messages.Sum(x => x.Images);
+            var oneboxTotals = messages.Sum(x => x.OneBoxes);
+            var starredMessageTotals = messages.Sum(x => x.StarredMessages);
+            var starsGainedTotals = messages.Sum(x => x.StarsGained);
+
+            var returnMessage = $"Stats for {date.ToString("yyyy-MM-dd")} between {startHour} and {endHour}: ";
+
+            returnMessage += $"{totalMessages} total messages, ";
+            returnMessage += $"{cvplsTotals} close vote requests, ";
+            returnMessage += $"{linkTotals} link messages, ";
+            returnMessage += $"{oneboxTotals} one-boxed messages, ";
+            returnMessage += $"{starredMessageTotals} messages starred, ";
+            returnMessage += $"{starsGainedTotals} stars given.";
+
+            return returnMessage;
         }
     }
 }

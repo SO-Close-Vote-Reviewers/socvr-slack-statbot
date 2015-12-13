@@ -1,21 +1,25 @@
-﻿using System;
+﻿using MargieBot.Models;
+using System;
 using System.Collections.Generic;
 
 namespace SOCVR.Slack.StatBot.DataFormatters
 {
     abstract class BaseDataFormatter
     {
-        public string FormatDataAsOutputMessage(List<UserDayStats> userStats, DateTime date, int startHour, int endHour, string outputType)
+        public BotMessage FormatDataAsOutputMessage(List<UserDayStats> userStats, DateTime date, int startHour, int endHour, string outputType)
         {
-            var outputMessage = GetHeaderSection(userStats, date, startHour, endHour);
+            var outputText = GetHeaderSection(userStats, date, startHour, endHour);
 
             //only append the data table if the output calls for it
             if (outputType == "table")
             {
-                outputMessage += "\n" + GetDataTable(userStats);
+                outputText += "\n" + GetDataTable(userStats);
             }
 
-            return outputMessage;
+            return new BotMessage()
+            {
+                Text = outputText
+            };
         }
 
         protected abstract string GetHeaderSection(List<UserDayStats> userStats, DateTime date, int startHour, int endHour);

@@ -65,10 +65,7 @@ namespace SOCVR.Slack.StatBot.Responders
             var dataFormatter = DetermineDataFormatter(settings.Filter);
             var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, settings.Date, settings.StartHour, settings.EndHour, settings.OutputType);
 
-            return new BotMessage()
-            {
-                Text = returnMessage,
-            };
+            return returnMessage;
         }
 
         private BaseDataFormatter DetermineDataFormatter(string filter)
