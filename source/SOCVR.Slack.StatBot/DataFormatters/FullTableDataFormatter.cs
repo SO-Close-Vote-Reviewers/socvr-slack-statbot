@@ -51,15 +51,37 @@ namespace SOCVR.Slack.StatBot.DataFormatters
             return $"```{dataSection}```";
         }
 
-        protected override string GetHeaderSection(List<UserDayStats> messages, DateTime date, int startHour, int endHour)
+        protected override string GetHeaderSection(List<UserDayStats> userStats, DateTime startDate, DateTime endDate)
         {
-            var totalMessages = messages.Sum(x=>x.TotalMessages);
-            var cvplsTotals = messages.Sum(x => x.CloseRequests);
-            var linkTotals = messages.Sum(x => x.Links);
-            var imageTotals = messages.Sum(x => x.Images);
-            var oneboxTotals = messages.Sum(x => x.OneBoxes);
-            var starredMessageTotals = messages.Sum(x => x.StarredMessages);
-            var starsGainedTotals = messages.Sum(x => x.StarsGained);
+            var totalMessages = userStats.Sum(x => x.TotalMessages);
+            var cvplsTotals = userStats.Sum(x => x.CloseRequests);
+            var linkTotals = userStats.Sum(x => x.Links);
+            var imageTotals = userStats.Sum(x => x.Images);
+            var oneboxTotals = userStats.Sum(x => x.OneBoxes);
+            var starredMessageTotals = userStats.Sum(x => x.StarredMessages);
+            var starsGainedTotals = userStats.Sum(x => x.StarsGained);
+
+            var returnMessage = $"Stats between {startDate.ToString("yyyy-MM-dd")} and {endDate.ToString("yyyy-MM-dd")}: ";
+
+            returnMessage += $"{totalMessages} total messages, ";
+            returnMessage += $"{cvplsTotals} close vote requests, ";
+            returnMessage += $"{linkTotals} link messages, ";
+            returnMessage += $"{oneboxTotals} one-boxed messages, ";
+            returnMessage += $"{starredMessageTotals} messages starred, ";
+            returnMessage += $"{starsGainedTotals} stars given.";
+
+            return returnMessage;
+        }
+
+        protected override string GetHeaderSection(List<UserDayStats> userStats, DateTime date, int startHour, int endHour)
+        {
+            var totalMessages = userStats.Sum(x=>x.TotalMessages);
+            var cvplsTotals = userStats.Sum(x => x.CloseRequests);
+            var linkTotals = userStats.Sum(x => x.Links);
+            var imageTotals = userStats.Sum(x => x.Images);
+            var oneboxTotals = userStats.Sum(x => x.OneBoxes);
+            var starredMessageTotals = userStats.Sum(x => x.StarredMessages);
+            var starsGainedTotals = userStats.Sum(x => x.StarsGained);
 
             var returnMessage = $"Stats for {date.ToString("yyyy-MM-dd")} between {startHour} and {endHour}: ";
 

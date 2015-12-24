@@ -25,12 +25,21 @@ namespace SOCVR.Slack.StatBot.DataFormatters
             return $"```{dataSection}```";
         }
 
+        protected override string GetHeaderSection(List<UserDayStats> userStats, DateTime startDate, DateTime endDate)
+        {
+            var totalOneBoxes = userStats.Sum(x => x.OneBoxes);
+            var start = startDate.ToString("yyyy-MM-dd");
+            var end = endDate.ToString("yyyy-MM-dd");
+
+            return $"A total of {totalOneBoxes} one-box messages (non-images) were posted between {start} and {end}.";
+        }
+
         protected override string GetHeaderSection(List<UserDayStats> userStats, DateTime date, int startHour, int endHour)
         {
             var totalOneBoxes = userStats.Sum(x => x.OneBoxes);
+            var dateValue = date.ToString("yyyy-MM-dd");
 
-            return "A total of {0} one-box messages (non-images) were posted on {1} between hours {2} and {3}."
-                .FormatInline(totalOneBoxes, date.ToString("yyyy-MM-dd"), startHour, endHour);
+            return $"A total of {totalOneBoxes} one-box messages (non-images) were posted on {dateValue} between hours {startHour} and {endHour}.";
         }
     }
 }
