@@ -16,6 +16,7 @@ namespace SOCVR.Slack.StatBot
 
             bot.Aliases = new List<string>() { "sc" };
             bot.Responders.Add(new Responders.DayStatsResponder());
+            bot.Responders.Add(new Responders.DateRangeStatsResponder());
             bot.Responders.Add(new Responders.HelpResponder());
             bot.Connect(botAPIKey);
 

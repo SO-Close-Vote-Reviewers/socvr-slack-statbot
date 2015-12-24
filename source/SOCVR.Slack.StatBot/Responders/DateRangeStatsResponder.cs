@@ -50,7 +50,7 @@ namespace SOCVR.Slack.StatBot.Responders
             foreach (var dateToCheck in datesToCheck)
             {
                 allChatMessages.AddRange(cs.GetMessagesForDate(dateToCheck, 0, 24));
-                Thread.Sleep(1000);
+                Thread.Sleep(250);
             }
 
             // Group by user and calculate results.
