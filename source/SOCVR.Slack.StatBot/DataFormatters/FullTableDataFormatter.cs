@@ -66,6 +66,7 @@ namespace SOCVR.Slack.StatBot.DataFormatters
             returnMessage += $"{totalMessages} total messages, ";
             returnMessage += $"{cvplsTotals} close vote requests, ";
             returnMessage += $"{linkTotals} link messages, ";
+            returnMessage += $"{imageTotals} images, ";
             returnMessage += $"{oneboxTotals} one-boxed messages, ";
             returnMessage += $"{starredMessageTotals} messages starred, ";
             returnMessage += $"{starsGainedTotals} stars given.";
@@ -88,6 +89,7 @@ namespace SOCVR.Slack.StatBot.DataFormatters
             returnMessage += $"{totalMessages} total messages, ";
             returnMessage += $"{cvplsTotals} close vote requests, ";
             returnMessage += $"{linkTotals} link messages, ";
+            returnMessage += $"{imageTotals} images, ";
             returnMessage += $"{oneboxTotals} one-boxed messages, ";
             returnMessage += $"{starredMessageTotals} messages starred, ";
             returnMessage += $"{starsGainedTotals} stars given.";
