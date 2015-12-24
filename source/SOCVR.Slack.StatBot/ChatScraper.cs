@@ -18,13 +18,23 @@ namespace SOCVR.Slack.StatBot
         /// <returns></returns>
         public List<ChatMessageInfo> GetMessagesForDate(DateTime date, int startHour, int endHour)
         {
-            var socvrTranscriptUrl = CreateTranscriptUrl(41570, date);
+            var parsedMessages = new List<ChatMessageInfo>();
 
-            CQ transcriptHtml = CQ.CreateFromUrl(socvrTranscriptUrl);
+            var socvrTranscriptUrl = CreateTranscriptUrl(41570, date);
+            var graveyardTranscriptUrl = CreateTranscriptUrl(90230, date);
+
+            parsedMessages.AddRange(ExtractMessagesFromTranscriptPage(socvrTranscriptUrl));
+            parsedMessages.AddRange(ExtractMessagesFromTranscriptPage(graveyardTranscriptUrl));
+
+            return parsedMessages;
+        }
+
+        private List<ChatMessageInfo> ExtractMessagesFromTranscriptPage(string transcriptUrl)
+        {
+            List<ChatMessageInfo> parsedMessages = new List<ChatMessageInfo>();
+            CQ transcriptHtml = CQ.CreateFromUrl(transcriptUrl);
 
             var allMessages = transcriptHtml["#transcript .message"];
-
-            var parsedMessages = new List<ChatMessageInfo>();
 
             foreach (var message in allMessages)
             {
