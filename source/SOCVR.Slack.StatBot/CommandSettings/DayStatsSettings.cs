@@ -10,7 +10,7 @@ namespace SOCVR.Slack.StatBot.CommandSettings
 {
     class DayStatsSettings : CommandSettings
     {
-        public const string CommandPattern = @"(?i)day-stats (?:(totals|cv-pls|links|moved|one-box|stars|starred|stars-in) )?((\d{4})-(\d{2})-(\d{2})|today|yesterday|(\d+) days ago)(?: (\d{1,2})-(\d{1,2}))?(?: (summary-only|table|csv))?";
+        public const string CommandPattern = @"(?i)day-stats (?:(totals|cv-pls|links|moved|one-box|stars|starred|stars-in) )?((\d{4})-(\d{2})-(\d{2})|today|yesterday|(\d+) days ago)(?: (\d{1,2})-(\d{1,2}))?(?: (summary-only|table))?";
 
         public DayStatsSettings(string userMessage) : base(userMessage) { }
 

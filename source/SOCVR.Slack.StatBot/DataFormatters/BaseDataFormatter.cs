@@ -22,7 +22,24 @@ namespace SOCVR.Slack.StatBot.DataFormatters
             };
         }
 
+        public BotMessage FormatDataAsOutputMessage(List<UserDayStats> userStats, DateTime startDate, DateTime endDate, string outputType)
+        {
+            var outputText = GetHeaderSection(userStats, startDate, endDate);
+
+            //only append the data table if the output calls for it
+            if (outputType == "table")
+            {
+                outputText += "\n" + GetDataTable(userStats);
+            }
+
+            return new BotMessage()
+            {
+                Text = outputText
+            };
+        }
+
         protected abstract string GetHeaderSection(List<UserDayStats> userStats, DateTime date, int startHour, int endHour);
+        protected abstract string GetHeaderSection(List<UserDayStats> userStats, DateTime startDate, DateTime endDate);
         protected abstract string GetDataTable(List<UserDayStats> userStats);
     }
 }
