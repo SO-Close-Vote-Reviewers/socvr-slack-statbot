@@ -51,6 +51,10 @@ namespace SOCVR.Slack.StatBot.Database
             modelBuilder.Entity<User>()
                 .Property(x => x.ProfileId)
                 .ValueGeneratedNever();
+
+            modelBuilder.Entity<User>()
+                .Property(x => x.DisplayName)
+                .IsRequired();
         }
     }
 }

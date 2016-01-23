@@ -1,4 +1,5 @@
 ﻿using MargieBot;
+using Microsoft.Data.Entity;
 using SOCVR.Slack.StatBot.Database;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace SOCVR.Slack.StatBot
             using (var db = new MessageStorage())
             {
                 Console.WriteLine("Initializing database.");
-                db.Database.EnsureCreated();
+                db.Database.Migrate();
                 Console.WriteLine("Database up to date.");
             }
 

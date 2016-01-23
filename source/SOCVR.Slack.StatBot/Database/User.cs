@@ -11,6 +11,7 @@ namespace SOCVR.Slack.StatBot.Database
     class User
     {
         public int ProfileId { get; set; }
+        public string DisplayName { get; set; }
 
         public virtual List<Message> PostedMessages { get; set; }
     }

@@ -8,6 +8,7 @@ using MargieBot.Models;
 using System.Text.RegularExpressions;
 using SOCVR.Slack.StatBot.CommandSettings;
 using SOCVR.Slack.StatBot.DataFormatters;
+using SOCVR.Slack.StatBot.Database;
 
 namespace SOCVR.Slack.StatBot.Responders
 {
@@ -42,30 +43,39 @@ namespace SOCVR.Slack.StatBot.Responders
             }
 
             // Get all the messages in chat.
-            var chatMessages = cs.GetMessagesForDate(settings.Date, settings.StartHour, settings.EndHour);
+            //var chatMessages = cs.GetMessagesForDate(settings.Date, settings.StartHour, settings.EndHour);
 
-            // Group by user and calculate results.
-            var userStats = chatMessages
-                .GroupBy(x => x.UserName)
-                .Select(x => new UserDayStats
-                {
-                    Username = x.Key,
-                    TotalMessages = x.Count(),
-                    CloseRequests = x.Count(m => m.IsCloseVoteRequest),
-                    Links = x.Count(m => m.HasLinks),
-                    Images = x.Count(m => m.IsImage),
-                    OneBoxes = x.Count(m => m.IsOneBoxed),
-                    StarredMessages = x.Count(m => m.StarCount > 0),
-                    StarsGained = x.Sum(m => m.StarCount)
-                })
-                .ToList();
+            using (var db = new MessageStorage())
+            {
+                var chatMessages = db.Messages
+                    .Where(x => x.PostedAt.Date == settings.Date)
+                    .Where(x => x.PostedAt.Hour >= settings.StartHour)
+                    .Where(x => x.PostedAt.Hour <= settings.EndHour)
+                    .ToList();
 
-            // Depending on the filter, choose the correct data formatter.
+                // Group by user and calculate results.
+                var userStats = chatMessages
+                    .GroupBy(x => x.User)
+                    .Select(x => new UserDayStats
+                    {
+                        Username = x.Key.DisplayName,
+                        TotalMessages = x.Count(),
+                        CloseRequests = x.Count(m => m.IsCloseVoteRequest),
+                        Links = x.Count(m => m.HasLinks),
+                        Images = x.Count(m => m.OneboxType == OneboxType.Image),
+                        OneBoxes = x.Count(m => m.OneboxType != null),
+                        StarredMessages = x.Count(m => m.StarCount > 0),
+                        StarsGained = x.Sum(m => m.StarCount)
+                    })
+                    .ToList();
 
-            var dataFormatter = DetermineDataFormatter(settings.Filter);
-            var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, settings.Date, settings.StartHour, settings.EndHour, settings.OutputType);
+                // Depending on the filter, choose the correct data formatter.
 
-            return returnMessage;
+                var dataFormatter = DetermineDataFormatter(settings.Filter);
+                var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, settings.Date, settings.StartHour, settings.EndHour, settings.OutputType);
+
+                return returnMessage;
+            }
         }
 
         private BaseDataFormatter DetermineDataFormatter(string filter)

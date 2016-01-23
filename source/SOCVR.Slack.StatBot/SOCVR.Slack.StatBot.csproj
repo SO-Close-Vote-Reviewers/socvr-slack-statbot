@@ -189,6 +189,10 @@
     <Compile Include="Migrations\20160123030220_InitialMigration.designer.cs">
       <DependentUpon>20160123030220_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20160123035910_IncludeDisplayName.cs" />
+    <Compile Include="Migrations\20160123035910_IncludeDisplayName.designer.cs">
+      <DependentUpon>20160123035910_IncludeDisplayName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
