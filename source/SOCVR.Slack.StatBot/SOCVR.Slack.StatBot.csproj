@@ -196,6 +196,7 @@
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegularChecker.cs" />
     <Compile Include="Responders\DateRangeStatsResponder.cs" />
     <Compile Include="Responders\DayStatsResponder.cs" />
     <Compile Include="Responders\HelpResponder.cs" />
