@@ -173,7 +173,9 @@
     <Compile Include="CommandSettings\CommandSettings.cs" />
     <Compile Include="CommandSettings\DayStatsSettings.cs" />
     <Compile Include="CommandSettings\RangeStatsSettings.cs" />
+    <Compile Include="Database\UserAlias.cs" />
     <Compile Include="Database\Message.cs" />
+    <Compile Include="Database\MessageRevision.cs" />
     <Compile Include="Database\MessageStorage.cs" />
     <Compile Include="Database\OneboxType.cs" />
     <Compile Include="Database\Room.cs" />
@@ -185,13 +187,9 @@
     <Compile Include="DataFormatters\OneBoxeDataFormatter.cs" />
     <Compile Include="DataFormatters\StarsDataFormatter.cs" />
     <Compile Include="DataFormatters\TotalsDataFormatter.cs" />
-    <Compile Include="Migrations\20160123030220_InitialMigration.cs" />
-    <Compile Include="Migrations\20160123030220_InitialMigration.designer.cs">
-      <DependentUpon>20160123030220_InitialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20160123035910_IncludeDisplayName.cs" />
-    <Compile Include="Migrations\20160123035910_IncludeDisplayName.designer.cs">
-      <DependentUpon>20160123035910_IncludeDisplayName.cs</DependentUpon>
+    <Compile Include="Migrations\20160123173240_InitialMigration.cs" />
+    <Compile Include="Migrations\20160123173240_InitialMigration.designer.cs">
+      <DependentUpon>20160123173240_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Program.cs" />
@@ -206,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Database\ModelClassesDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

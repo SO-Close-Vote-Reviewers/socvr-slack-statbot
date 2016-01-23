@@ -10,6 +10,12 @@ namespace SOCVR.Slack.StatBot.Database
     {
         public int RoomId { get; set; }
 
+        /// <summary>
+        /// The title of the room. For example, "SO Close Vote Reviewers"
+        /// </summary>
+        public string Name { get; set; }
+        public string Description { get; set; }
+
         public virtual List<Message> Messages { get; set; }
     }
 }

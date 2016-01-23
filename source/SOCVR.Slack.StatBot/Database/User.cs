@@ -11,8 +11,17 @@ namespace SOCVR.Slack.StatBot.Database
     class User
     {
         public int ProfileId { get; set; }
-        public string DisplayName { get; set; }
 
-        public virtual List<Message> PostedMessages { get; set; }
+        /// <summary>
+        /// The date and time the user joined Stack Overflow.
+        /// </summary>
+        public DateTimeOffset JoinedStackOverflowAt { get; set; }
+
+        /// <summary>
+        /// The date the user joined Stack Overflow Chat.
+        /// </summary>
+        public DateTimeOffset JoinedChatSystemAt { get; set; }
+
+        public virtual List<UserAlias> Aliases { get; set; }
     }
 }

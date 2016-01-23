@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SOCVR.Slack.StatBot.Database.Message">
+    <Position X="0.5" Y="2.25" Width="2.25" />
+    <AssociationLine Name="MessageRevisions" Type="SOCVR.Slack.StatBot.Database.MessageRevision">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.421" Y="0.112" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="OneboxType" Type="SOCVR.Slack.StatBot.Database.OneboxType" FixedFromPoint="true">
+      <Path>
+        <Point X="2.75" Y="3.562" />
+        <Point X="5.5" Y="3.562" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgCACAAAIAAABABAAgCAEAAAAAEQEAAAAAgAAAAA=</HashCode>
+      <FileName>Database\Message.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Room" />
+      <Property Name="OriginalPoster" />
+      <Property Name="OneboxType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="MessageRevisions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SOCVR.Slack.StatBot.Database.Room">
+    <Position X="3.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAgAAAAAAAAAAQAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Database\Room.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Messages" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SOCVR.Slack.StatBot.Database.User">
+    <Position X="7.25" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEIAABAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Database\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Aliases" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SOCVR.Slack.StatBot.Database.UserAlias">
+    <Position X="4.5" Y="4.25" Width="1.5" />
+    <AssociationLine Name="MessageRevisions" Type="SOCVR.Slack.StatBot.Database.MessageRevision" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.688" Y="5.546" />
+        <Point X="5.688" Y="7.532" />
+        <Point X="2.75" Y="7.532" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Database\UserAlias.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Messages" />
+      <Property Name="MessageRevisions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SOCVR.Slack.StatBot.Database.MessageRevision">
+    <Position X="1" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAhAAAAABAAAAAAEAAAAKAAAAAA=</HashCode>
+      <FileName>Database\MessageRevision.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Message" />
+      <Property Name="RevisionAuthor" />
+    </ShowAsAssociation>
+  </Class>
+  <Enum Name="SOCVR.Slack.StatBot.Database.OneboxType">
+    <Position X="5.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAZEAAAAAAAAAABAAAAEAABCAAAABSAAAAAAAABAAA=</HashCode>
+      <FileName>Database\OneboxType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
