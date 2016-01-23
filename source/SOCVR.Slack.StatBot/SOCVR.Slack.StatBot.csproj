@@ -169,7 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatMessageInfo.cs" />
-    <Compile Include="ChatScraper.cs" />
     <Compile Include="CommandSettings\CommandSettings.cs" />
     <Compile Include="CommandSettings\DayStatsSettings.cs" />
     <Compile Include="CommandSettings\RangeStatsSettings.cs" />
@@ -192,6 +191,7 @@
       <DependentUpon>20160123173240_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
+    <Compile Include="Parsing\ChatScraper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegularChecker.cs" />
