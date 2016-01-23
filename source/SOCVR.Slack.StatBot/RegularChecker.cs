@@ -18,32 +18,57 @@ namespace SOCVR.Slack.StatBot
         /// <returns>True if the user is a regular, otherwise false.</returns>
         public bool IsUserRegular(int userID)
         {
-            //using (var db = new MessageStorage())
-            //{
-            //    var totalMsgCount = db.Messages.Count(x => x.UserId == userID);
-            //    if (totalMsgCount < 1000) return false;
+            using (var db = new MessageStorage())
+            {
+                var userMessages = db.Messages
+                    .Where(x => x.OriginalPoster.User.ProfileId == userID);
 
-            //    var recentMsgs = db.Messages
-            //        .Where(x => x.UserId == userID && (DateTime.UtcNow - x.PostedAt).TotalDays < 90);
-            //    var msgsByDay = new Dictionary<DateTime, int>();
+                // Does the user have at least 1000 all-time messages?
+                var totalMessageCount = userMessages.Count();
+                if (totalMessageCount < 1000) return false;
 
-            //    foreach (var m in recentMsgs)
-            //    {
-            //        var date = m.PostedAt.Date;
-            //        if (msgsByDay.ContainsKey(date))
-            //        {
-            //            msgsByDay[date]++;
-            //        }
-            //        else
-            //        {
-            //            msgsByDay[date] = 1;
-            //        }
-            //    }
+                // In the last 90 days, has the user made at least 10 messages per day for 15 days each 30 day period?
 
-            //    return msgsByDay.Values.Count(x => x > 9) > 14;
-            //}
+                foreach (var periodStartDate in EnumPeriodStartDates())
+                {
+                    var periodEndDate = periodStartDate.AddDays(30);
 
-            throw new NotImplementedException();
+                    //fetch all messages from this time period
+                    var periodMessages = userMessages
+                        .Where(x => x.InitialRevisionTs >= periodStartDate)
+                        .Where(x => x.InitialRevisionTs <= periodEndDate);
+
+                    //group the messages by their day
+                    var numberOfActiveDays = periodMessages
+                        .GroupBy(x => x.InitialRevisionTs.Date)
+                        .Where(x => x.Count() >= 10) //only selected dates with 10 or more messages in that day
+                        .Count(); //get the number of days in this period with 10 or more messages each day
+
+                    if (numberOfActiveDays < 15)
+                    {
+                        //user was not active enough in that period
+                        return false;
+                    }
+                }
+
+                //passed all the tests
+                return true;
+            }
+        }
+
+        private IEnumerable<DateTime> EnumPeriodStartDates()
+        {
+            //start with today's UTC date
+            var today = DateTimeOffset.UtcNow.Date;
+
+            //now go back 30, 60, and 90 days
+            //which is 30 * (1,2,3)
+
+            var dates = Enumerable.Range(1, 3)
+                .Select(x => x * 30)
+                .Select(x => today.AddDays(-x));
+
+            return dates;
         }
     }
 }
