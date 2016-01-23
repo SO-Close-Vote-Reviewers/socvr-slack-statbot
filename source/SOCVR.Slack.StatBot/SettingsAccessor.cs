@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TCL.Extensions;
 
@@ -9,7 +13,7 @@ namespace SOCVR.Slack.StatBot
         /// <summary>
         /// Fetches the setting that is specified by the Key.
         /// First tries to get the value from an environment variable.
-        /// If it doesn't exist, tries to get the value from the command line arguments.
+        /// If it doesn't exist, tries to get the value from the "settings.json" file
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -22,17 +26,15 @@ namespace SOCVR.Slack.StatBot
                 return envValue.Parse<T>();
             }
 
-            var allCommandLineArgs = Environment.GetCommandLineArgs();
-
-            var cmdEntries = allCommandLineArgs
-                .Skip(1)
-                .ToDictionary(x => x.Split('=')[0], x => x.Split('=')[1]);
-
-            var hasCmdEntry = cmdEntries.ContainsKey(key);
-
-            if (hasCmdEntry)
+            if (File.Exists("settings.json"))
             {
-                return cmdEntries[key].Parse<T>();
+                var content = File.ReadAllText("settings.json");
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+
+                if (values.ContainsKey(key))
+                {
+                    return values[key].Parse<T>();
+                }
             }
 
             throw new Exception("Unable to locate setting.");

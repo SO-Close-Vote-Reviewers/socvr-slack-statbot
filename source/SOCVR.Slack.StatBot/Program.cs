@@ -1,4 +1,5 @@
 ﻿using MargieBot;
+using SOCVR.Slack.StatBot.Database;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,6 +13,13 @@ namespace SOCVR.Slack.StatBot
 
         static void Main(string[] args)
         {
+            using (var db = new MessageStorage())
+            {
+                Console.WriteLine("Initializing database.");
+                db.Database.EnsureCreated();
+                Console.WriteLine("Database up to date.");
+            }
+
             var botAPIKey = SettingsAccessor.GetSetting<string>("SlackBotAPIKey");
 
             bot.Aliases = new List<string>() { "sc" };

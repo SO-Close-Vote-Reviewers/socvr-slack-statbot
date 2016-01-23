@@ -15,7 +15,8 @@ namespace SOCVR.Slack.StatBot.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase();
+            var connectionString = SettingsAccessor.GetSetting<string>("ConnectionString");
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
