@@ -12,6 +12,9 @@ namespace SOCVR.Slack.StatBot.Database
         public DbSet<Message> Messages { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ParsedTranscriptPage> ParsedTranscriptPages { get; set; }
+        public DbSet<MessageRevision> MessageRevisions { get; set; }
+        public DbSet<UserAlias> UserAliases { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,6 +26,7 @@ namespace SOCVR.Slack.StatBot.Database
         {
             ConfigureMessageEntity(modelBuilder);
             ConfigureMessageRevisionEntity(modelBuilder);
+            ConfigureParsedTranscriptPageEntity(modelBuilder);
             ConfigureRoomEntity(modelBuilder);
             ConfigureUserEntity(modelBuilder);
             ConfigureUserAliasEntity(modelBuilder);
@@ -72,6 +76,19 @@ namespace SOCVR.Slack.StatBot.Database
                 .HasOne(mr => mr.RevisionAuthor)
                 .WithMany(a => a.MessageRevisions)
                 .HasForeignKey(mr => mr.RevisionAuthorId);
+        }
+
+        private static void ConfigureParsedTranscriptPageEntity(ModelBuilder modelBuilder)
+        {
+            //primary key
+            modelBuilder.Entity<ParsedTranscriptPage>()
+                .HasKey(x => new { x.RoomId, x.Date });
+
+            //foreign keys
+            modelBuilder.Entity<ParsedTranscriptPage>()
+                .HasOne(p => p.Room)
+                .WithMany(r => r.ParsedTranscriptPages)
+                .HasForeignKey(p => p.RoomId);
         }
 
         private static void ConfigureRoomEntity(ModelBuilder modelBuilder)

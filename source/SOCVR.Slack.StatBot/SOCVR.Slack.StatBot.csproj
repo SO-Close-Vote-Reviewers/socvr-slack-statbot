@@ -171,6 +171,7 @@
     <Compile Include="CommandSettings\CommandSettings.cs" />
     <Compile Include="CommandSettings\DayStatsSettings.cs" />
     <Compile Include="CommandSettings\RangeStatsSettings.cs" />
+    <Compile Include="Database\ParsedTranscriptPage.cs" />
     <Compile Include="Database\UserAlias.cs" />
     <Compile Include="Database\Message.cs" />
     <Compile Include="Database\MessageRevision.cs" />
@@ -188,6 +189,10 @@
     <Compile Include="Migrations\20160123173240_InitialMigration.cs" />
     <Compile Include="Migrations\20160123173240_InitialMigration.designer.cs">
       <DependentUpon>20160123173240_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20160124200136_AddParsedTranscriptPageTable.cs" />
+    <Compile Include="Migrations\20160124200136_AddParsedTranscriptPageTable.designer.cs">
+      <DependentUpon>20160124200136_AddParsedTranscriptPageTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Parsing\ChatScraper.cs" />

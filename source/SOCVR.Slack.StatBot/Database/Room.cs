@@ -17,5 +17,6 @@ namespace SOCVR.Slack.StatBot.Database
         public string Description { get; set; }
 
         public virtual List<Message> Messages { get; set; }
+        public virtual List<ParsedTranscriptPage> ParsedTranscriptPages { get; set; }
     }
 }

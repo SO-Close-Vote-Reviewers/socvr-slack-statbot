@@ -8,9 +8,10 @@ using SOCVR.Slack.StatBot.Database;
 namespace SOCVR.Slack.StatBot.Migrations
 {
     [DbContext(typeof(MessageStorage))]
-    partial class MessageStorageModelSnapshot : ModelSnapshot
+    [Migration("20160124200136_AddParsedTranscriptPageTable")]
+    partial class AddParsedTranscriptPageTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348");
