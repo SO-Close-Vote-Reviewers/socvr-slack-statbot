@@ -191,6 +191,11 @@
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Parsing\ChatScraper.cs" />
+    <Compile Include="Parsing\Url\RateLimitedUrl.cs" />
+    <Compile Include="Parsing\Url\StackOverflowChatProfileUrl.cs" />
+    <Compile Include="Parsing\Url\StackOverflowChatTranscriptUrl.cs" />
+    <Compile Include="Parsing\Url\StackOverflowChatUrl.cs" />
+    <Compile Include="Parsing\Url\StackOverflowUrl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegularChecker.cs" />
