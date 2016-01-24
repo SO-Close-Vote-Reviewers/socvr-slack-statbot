@@ -1,4 +1,6 @@
 ﻿using CsQuery;
+using SOCVR.Slack.StatBot.Database;
+using SOCVR.Slack.StatBot.Parsing.Url;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,52 @@ namespace SOCVR.Slack.StatBot
     /// </summary>
     class ChatScraper
     {
+        /// <summary>
+        /// Returns a collection of dates between and including a start and endpoint.
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        private IEnumerable<DateTime> EnumDatesInRange(DateTime startDate, DateTime endDate)
+        {
+            startDate = startDate.Date;
+            endDate = endDate.Date;
+
+            if (startDate > endDate)
+                throw new ArgumentException("Start date is after end date");
+
+            var currentDate = startDate;
+
+            while (currentDate <= endDate)
+            {
+                yield return currentDate;
+                currentDate = currentDate.AddDays(1);
+            }
+        }
+
+        private IEnumerable<DateTime> DetermineDatesToParse(int roomId)
+        {
+            var chatFirstDay = new DateTime(2013, 01, 01); //change this value
+
+            var allDays = EnumDatesInRange(chatFirstDay, DateTimeOffset.UtcNow.Date);
+
+            using (var db = new MessageStorage())
+            {
+                var pagesAlreadyParsed = db.ParsedTranscriptPages
+                    .Where(x => x.RoomId == roomId)
+                    .Select(x => x.Date.Date)
+                    .ToList();
+
+                var pagesToParse = allDays.Except(pagesAlreadyParsed);
+                return pagesToParse;
+            }
+        }
+
+        public Message ParseTranscriptPage(StackOverflowChatTranscriptUrl url)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>
