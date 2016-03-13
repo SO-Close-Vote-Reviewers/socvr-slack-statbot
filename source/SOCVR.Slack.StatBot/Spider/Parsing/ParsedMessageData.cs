@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SOCVR.Slack.StatBot.Spider.Parsing
 {
-    class ParsedMessageData
+    public class ParsedMessageData
     {
         public string AuthorDisplayName { get; set; }
         public int AuthorId { get; set; }
@@ -20,9 +20,11 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
         public int RoomId { get; set; }
         public int StarCount { get; set; }
         public int TagsCount { get; set; }
+
+        public List<ParsedMessageRevision> Revisions { get; set; }
     }
 
-    class ParsedMessageRevision
+    public class ParsedMessageRevision
     {
         public int AuthorId { get; set; }
         public string DisplayName { get; set; }

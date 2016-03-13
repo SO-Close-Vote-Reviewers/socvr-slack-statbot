@@ -17,7 +17,7 @@ namespace SOCVR.Slack.StatBot.Frontend.Responders
     {
         Regex commandPattern = new Regex(RangeStatsSettings.CommandPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        ChatScraper cs = new ChatScraper();
+        //ChatScraper cs = new ChatScraper();
 
         public bool CanRespond(ResponseContext context)
         {
@@ -29,53 +29,55 @@ namespace SOCVR.Slack.StatBot.Frontend.Responders
 
         public BotMessage GetResponse(ResponseContext context)
         {
-            RangeStatsSettings settings;
+            //RangeStatsSettings settings;
 
-            try
-            {
-                settings = new RangeStatsSettings(context.Message.Text);
-            }
-            catch (Exception ex)
-            {
-                return new BotMessage()
-                {
-                    Text = $"Invalid command settings: {ex.Message}"
-                };
-            }
+            //try
+            //{
+            //    settings = new RangeStatsSettings(context.Message.Text);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return new BotMessage()
+            //    {
+            //        Text = $"Invalid command settings: {ex.Message}"
+            //    };
+            //}
 
-            var datesToCheck = Enumerable.Range(0, 1 + settings.EndDate.Subtract(settings.StartDate).Days)
-                .Select(offset => settings.StartDate.AddDays(offset));
+            //var datesToCheck = Enumerable.Range(0, 1 + settings.EndDate.Subtract(settings.StartDate).Days)
+            //    .Select(offset => settings.StartDate.AddDays(offset));
 
-            var allChatMessages = new List<ChatMessageInfo>();
+            //var allChatMessages = new List<ChatMessageInfo>();
 
-            foreach (var dateToCheck in datesToCheck)
-            {
-                allChatMessages.AddRange(cs.GetMessagesForDate(dateToCheck, 0, 24));
-                Thread.Sleep(250);
-            }
+            //foreach (var dateToCheck in datesToCheck)
+            //{
+            //    allChatMessages.AddRange(cs.GetMessagesForDate(dateToCheck, 0, 24));
+            //    Thread.Sleep(250);
+            //}
 
-            // Group by user and calculate results.
-            var userStats = allChatMessages
-                .GroupBy(x => x.UserName)
-                .Select(x => new UserDayStats
-                {
-                    Username = x.Key,
-                    TotalMessages = x.Count(),
-                    CloseRequests = x.Count(m => m.IsCloseVoteRequest),
-                    Links = x.Count(m => m.HasLinks),
-                    Images = x.Count(m => m.IsImage),
-                    OneBoxes = x.Count(m => m.IsOneBoxed),
-                    StarredMessages = x.Count(m => m.StarCount > 0),
-                    StarsGained = x.Sum(m => m.StarCount)
-                })
-                .ToList();
+            //// Group by user and calculate results.
+            //var userStats = allChatMessages
+            //    .GroupBy(x => x.UserName)
+            //    .Select(x => new UserDayStats
+            //    {
+            //        Username = x.Key,
+            //        TotalMessages = x.Count(),
+            //        CloseRequests = x.Count(m => m.IsCloseVoteRequest),
+            //        Links = x.Count(m => m.HasLinks),
+            //        Images = x.Count(m => m.IsImage),
+            //        OneBoxes = x.Count(m => m.IsOneBoxed),
+            //        StarredMessages = x.Count(m => m.StarCount > 0),
+            //        StarsGained = x.Sum(m => m.StarCount)
+            //    })
+            //    .ToList();
 
-            // Depending on the filter, choose the correct data formatter.
+            //// Depending on the filter, choose the correct data formatter.
 
-            var dataFormatter = DetermineDataFormatter(settings.Filter);
-            var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, settings.StartDate, settings.EndDate, settings.OutputType);
+            //var dataFormatter = DetermineDataFormatter(settings.Filter);
+            //var returnMessage = dataFormatter.FormatDataAsOutputMessage(userStats, settings.StartDate, settings.EndDate, settings.OutputType);
 
-            return returnMessage;
+            //return returnMessage;
+
+            return null;
         }
 
         private BaseDataFormatter DetermineDataFormatter(string filter)

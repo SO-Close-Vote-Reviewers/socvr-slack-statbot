@@ -199,22 +199,24 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsAccessor.cs" />
+    <Compile Include="Spider\Download\WebClientDownloader.cs" />
     <Compile Include="Spider\Parsing\ChatScraper.cs" />
+    <Compile Include="Spider\Download\IHtmlDownloader.cs" />
     <Compile Include="Spider\Parsing\ParsedMessageData.cs" />
-    <Compile Include="Spider\Parsing\Url\RateLimitedUrl.cs" />
-    <Compile Include="Spider\Parsing\Url\StackOverflowChatMessageHistoryUrl.cs" />
-    <Compile Include="Spider\Parsing\Url\StackOverflowChatProfileUrl.cs" />
-    <Compile Include="Spider\Parsing\Url\StackOverflowChatRoomInfoUrl.cs" />
-    <Compile Include="Spider\Parsing\Url\StackOverflowChatTranscriptUrl.cs" />
-    <Compile Include="Spider\Parsing\Url\StackOverflowChatUrl.cs" />
-    <Compile Include="Spider\Parsing\Url\StackOverflowUrl.cs" />
+    <Compile Include="Spider\Url\RateLimitedUrl.cs" />
+    <Compile Include="Spider\Url\StackOverflowChatMessageHistoryUrl.cs" />
+    <Compile Include="Spider\Url\StackOverflowChatProfileUrl.cs" />
+    <Compile Include="Spider\Url\StackOverflowChatRoomInfoUrl.cs" />
+    <Compile Include="Spider\Url\StackOverflowChatTranscriptUrl.cs" />
+    <Compile Include="Spider\Url\StackOverflowChatUrl.cs" />
+    <Compile Include="Spider\Url\StackOverflowUrl.cs" />
     <Compile Include="TableParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Database\ModelClassesDiagram.cd" />
     <None Include="packages.config" />
-    <None Include="Spider\Parsing\Url\Diagram.cd" />
+    <None Include="Spider\Url\Diagram.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOCVR.Slack.StatBot", "SOCVR.Slack.StatBot\SOCVR.Slack.StatBot.csproj", "{68065215-D199-4208-86CE-E49D56A82034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOCVR.Slack.StatBot.Tests", "SOCVR.Slack.StatBot.Tests\SOCVR.Slack.StatBot.Tests.csproj", "{FFBC978F-820C-47C9-8E6D-02881E41BDEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,12 @@ Global
 		{68065215-D199-4208-86CE-E49D56A82034}.Mono|Any CPU.Deploy.0 = Mono|Any CPU
 		{68065215-D199-4208-86CE-E49D56A82034}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68065215-D199-4208-86CE-E49D56A82034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFBC978F-820C-47C9-8E6D-02881E41BDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFBC978F-820C-47C9-8E6D-02881E41BDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFBC978F-820C-47C9-8E6D-02881E41BDEE}.Mono|Any CPU.ActiveCfg = Release|Any CPU
+		{FFBC978F-820C-47C9-8E6D-02881E41BDEE}.Mono|Any CPU.Build.0 = Release|Any CPU
+		{FFBC978F-820C-47C9-8E6D-02881E41BDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFBC978F-820C-47C9-8E6D-02881E41BDEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

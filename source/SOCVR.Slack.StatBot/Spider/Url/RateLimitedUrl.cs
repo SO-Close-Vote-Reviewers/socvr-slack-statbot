@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SOCVR.Slack.StatBot.Spider.Download;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,12 +7,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SOCVR.Slack.StatBot.Spider.Parsing.Url
+namespace SOCVR.Slack.StatBot.Spider.Url
 {
-    abstract class RateLimitedUrl
+    public abstract class RateLimitedUrl
     {
+        public RateLimitedUrl(IHtmlDownloader downloader)
+        {
+            this.downloader = downloader;
+        }
+
         private static DateTimeOffset lastFetchTime = DateTimeOffset.Now;
         private object downloadLockObject = new object();
+        private IHtmlDownloader downloader;
 
         protected Uri Url { get; set; }
 
@@ -33,10 +40,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing.Url
                     Thread.Sleep((int)milisecondsToWait);
                 }
 
-                using (var htmlClient = new WebClient())
-                {
-                    return htmlClient.DownloadString(Url);
-                }
+                return downloader.DownloadHtml(Url);
             }
         }
 
