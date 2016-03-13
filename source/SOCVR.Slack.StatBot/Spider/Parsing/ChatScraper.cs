@@ -94,72 +94,69 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
         /// <param name="messageId"></param>
         public ParsedMessageData ParseMessage(int messageId, int roomId)
         {
-            using (var db = new MessageStorage())
-            {
-                //get the history page
-                var historyUrl = new StackOverflowChatMessageHistoryUrl(downloader, messageId);
-                var historyPageHtml = CQ.Create(historyUrl.DownloadHtml());
+            //get the history page
+            var historyUrl = new StackOverflowChatMessageHistoryUrl(downloader, messageId);
+            var historyPageHtml = CQ.Create(historyUrl.DownloadHtml());
 
-                var extractedMessageData = new ParsedMessageData();
+            var extractedMessageData = new ParsedMessageData();
 
-                var currentVersionMonologue = historyPageHtml.Find("#content .monologue").First();
-                var currentVersionMessageHtml = currentVersionMonologue.Find($"#message-{messageId}");
+            var currentVersionMonologue = historyPageHtml.Find("#content .monologue").First();
+            var currentVersionMessageHtml = currentVersionMonologue.Find($"#message-{messageId}");
 
-                extractedMessageData.AuthorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
-                extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
+            extractedMessageData.AuthorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
+            extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
 
-                extractedMessageData.CurrentHtmlContent = currentVersionMessageHtml.Find(".content").Html().Trim();
-                extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
+            extractedMessageData.CurrentHtmlContent = currentVersionMessageHtml.Find(".content").Html().Trim();
+            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
 
-                var initialRevisionTimeRaw = historyPageHtml
-                    .Find("#content .monologue")
-                    .Last()
-                    .Find(".timestamp")
-                    .Text();
+            var initialRevisionTimeRaw = historyPageHtml
+                .Find("#content .monologue")
+                .Last()
+                .Find(".timestamp")
+                .Text();
 
 #warning this needs to be fixed.
-                //extractedMessageData.InitialRevisionTs = DateTimeOffset.Now + TimeSpan.Parse(initialRevisionTimeRaw);
+            //extractedMessageData.InitialRevisionTs = DateTimeOffset.Now + TimeSpan.Parse(initialRevisionTimeRaw);
 
-                extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
-                extractedMessageData.MessageId = messageId;
+            extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
+            extractedMessageData.MessageId = messageId;
 
-                extractedMessageData.RawOneboxName = currentVersionMessageHtml
-                    .Find(".content")
-                    .Children(".onebox")
-                    .SingleOrDefault()
-                    ?.Classes
-                    ?.Last();
+            extractedMessageData.RawOneboxName = currentVersionMessageHtml
+                .Find(".content")
+                .Children(".onebox")
+                .SingleOrDefault()
+                ?.Classes
+                ?.Last();
 
-                extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
-                extractedMessageData.RoomId = roomId;
+            extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
+            extractedMessageData.RoomId = roomId;
 
-                var starContainer = currentVersionMessageHtml.Find(".stars.vote-count-container");
+            var starContainer = currentVersionMessageHtml.Find(".stars.vote-count-container");
 
-                if (starContainer.Any())
-                {
-                    // There is at least one star on the message.
-                    var rawStarCount = starContainer.Find(".times").Text();
+            if (starContainer.Any())
+            {
+                // There is at least one star on the message.
+                var rawStarCount = starContainer.Find(".times").Text();
 
-                    // If it's an empty string then the count is one. Else parse the number.
-                    extractedMessageData.StarCount = rawStarCount == ""
-                        ? 1
-                        : rawStarCount.Parse<int>();
-                }
-                else
-                {
-                    // There are no stars.
-                    extractedMessageData.StarCount = 0;
-                }
-
-                //extractedMessageData.Tags
-
-
-
-                //extractedMessageData.InitialRevisionTs
-                //extractedMessageData.MessageRevisions
-
-                return extractedMessageData;
+                // If it's an empty string then the count is one. Else parse the number.
+                extractedMessageData.StarCount = rawStarCount == ""
+                    ? 1
+                    : rawStarCount.Parse<int>();
             }
+            else
+            {
+                // There are no stars.
+                extractedMessageData.StarCount = 0;
+            }
+
+            //extractedMessageData.Tags
+
+
+
+            //extractedMessageData.InitialRevisionTs
+            //extractedMessageData.MessageRevisions
+
+            return extractedMessageData;
         }
 
         //private Room GetRoomData(int roomId)
