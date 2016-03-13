@@ -8,8 +8,8 @@ using SOCVR.Slack.StatBot.Database;
 namespace SOCVR.Slack.StatBot.Migrations
 {
     [DbContext(typeof(MessageStorage))]
-    [Migration("20160123173240_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20160313213239_InitialMigrations")]
+    partial class InitialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,7 +18,11 @@ namespace SOCVR.Slack.StatBot.Migrations
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.Message", b =>
                 {
-                    b.Property<int>("MessageId");
+                    b.Property<long>("MessageId");
+
+                    b.Property<int>("AuthorId");
+
+                    b.Property<string>("CurrentHtmlContent");
 
                     b.Property<string>("CurrentText");
 
@@ -27,8 +31,6 @@ namespace SOCVR.Slack.StatBot.Migrations
                     b.Property<bool>("IsCloseVoteRequest");
 
                     b.Property<int?>("OneboxType");
-
-                    b.Property<int>("OriginalPosterId");
 
                     b.Property<int>("PlainTextLinkCount");
 
@@ -43,7 +45,7 @@ namespace SOCVR.Slack.StatBot.Migrations
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.MessageRevision", b =>
                 {
-                    b.Property<int>("MessageId");
+                    b.Property<long>("MessageId");
 
                     b.Property<int>("RevisionNumber");
 
@@ -55,6 +57,15 @@ namespace SOCVR.Slack.StatBot.Migrations
                         .IsRequired();
 
                     b.HasKey("MessageId", "RevisionNumber");
+                });
+
+            modelBuilder.Entity("SOCVR.Slack.StatBot.Database.ParsedTranscriptPage", b =>
+                {
+                    b.Property<int>("RoomId");
+
+                    b.Property<DateTime>("Date");
+
+                    b.HasKey("RoomId", "Date");
                 });
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.Room", b =>
@@ -87,7 +98,7 @@ namespace SOCVR.Slack.StatBot.Migrations
 
                     b.Property<string>("DisplayName");
 
-                    b.Property<int>("OriginalPosterId");
+                    b.Property<int>("AuthorId");
 
                     b.Property<int>("RevisionAuthorId");
 
@@ -98,8 +109,8 @@ namespace SOCVR.Slack.StatBot.Migrations
                 {
                     b.HasOne("SOCVR.Slack.StatBot.Database.UserAlias")
                         .WithMany()
-                        .HasForeignKey("OriginalPosterId")
-                        .HasPrincipalKey("OriginalPosterId");
+                        .HasForeignKey("AuthorId")
+                        .HasPrincipalKey("AuthorId");
 
                     b.HasOne("SOCVR.Slack.StatBot.Database.Room")
                         .WithMany()
@@ -116,6 +127,13 @@ namespace SOCVR.Slack.StatBot.Migrations
                         .WithMany()
                         .HasForeignKey("RevisionAuthorId")
                         .HasPrincipalKey("RevisionAuthorId");
+                });
+
+            modelBuilder.Entity("SOCVR.Slack.StatBot.Database.ParsedTranscriptPage", b =>
+                {
+                    b.HasOne("SOCVR.Slack.StatBot.Database.Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
                 });
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.UserAlias", b =>

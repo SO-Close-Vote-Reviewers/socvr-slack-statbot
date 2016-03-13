@@ -191,13 +191,9 @@
     <Compile Include="Frontend\Responders\DayStatsResponder.cs" />
     <Compile Include="Frontend\Responders\HelpResponder.cs" />
     <Compile Include="Frontend\UserDayStats.cs" />
-    <Compile Include="Migrations\20160123173240_InitialMigration.cs" />
-    <Compile Include="Migrations\20160123173240_InitialMigration.designer.cs">
-      <DependentUpon>20160123173240_InitialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20160124200136_AddParsedTranscriptPageTable.cs" />
-    <Compile Include="Migrations\20160124200136_AddParsedTranscriptPageTable.designer.cs">
-      <DependentUpon>20160124200136_AddParsedTranscriptPageTable.cs</DependentUpon>
+    <Compile Include="Migrations\20160313213239_InitialMigrations.cs" />
+    <Compile Include="Migrations\20160313213239_InitialMigrations.designer.cs">
+      <DependentUpon>20160313213239_InitialMigrations.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Program.cs" />

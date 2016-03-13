@@ -87,7 +87,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
         /// Parse the message and save info to the database.
         /// </summary>
         /// <param name="messageId"></param>
-        private void ParseMessage(int messageId, StackOverflowChatTranscriptUrl transcriptUrl)
+        private ParsedMessageData ParseMessage(int messageId, StackOverflowChatTranscriptUrl transcriptUrl)
         {
             using (var db = new MessageStorage())
             {
@@ -95,41 +95,38 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 var historyUrl = new StackOverflowChatMessageHistoryUrl(messageId);
                 var historyPageHtml = CQ.Create(historyUrl.DownloadHtml());
 
-                var extractedMessageData = new Message();
+                var extractedMessageData = new ParsedMessageData();
 
                 var currentVersionMonologue = historyPageHtml.Find("#content .monologue").First();
                 var currentVersionMessageHtml = currentVersionMonologue.Find($"#message-{messageId}");
 
+                extractedMessageData.AuthorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
+                extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
+
                 extractedMessageData.CurrentHtmlContent = currentVersionMessageHtml.Find(".content").Html().Trim();
                 extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
-                
+
+                var initialRevisionTimeRaw = historyPageHtml
+                    .Find("#content .monologue")
+                    .Last()
+                    .Find(".timestamp")
+                    .Text();
+
+#warning this needs to be fixed.
+                extractedMessageData.InitialRevisionTs = DateTimeOffset.Now + TimeSpan.Parse(initialRevisionTimeRaw);
+
                 extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
-                extractedMessageData.MessageId = currentVersionMessageHtml.Attr("id").Replace("message-", "").Parse<int>();
-                
-                extractedMessageData.OneboxType = GetOneboxTypeForMessage(currentVersionMessageHtml);
+                extractedMessageData.MessageId = messageId;
 
-                var authorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
-                var dbAuthor = db.Users
-                    .Include(x => x.Aliases)
-                    .SingleOrDefault(x => x.ProfileId == authorId);
+                extractedMessageData.RawOneboxName = currentVersionMessageHtml
+                    .Find(".content")
+                    .Children(".onebox")
+                    .SingleOrDefault()
+                    ?.Classes
+                    ?.Last();
 
-                if (dbAuthor == null)
-                {
-                    dbAuthor = GetUserData(authorId);
-                }
-
-                //extractedMessageData.OriginalPoster
                 extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
-
-                var dbRoom = db.Rooms.SingleOrDefault(x => x.RoomId == transcriptUrl.RoomId);
-
-                if (dbRoom == null)
-                {
-                    //make it
-                    dbRoom = GetRoomData(transcriptUrl.RoomId);
-                }
-
-                extractedMessageData.Room = dbRoom;
+                extractedMessageData.RoomId = transcriptUrl.RoomId;
 
                 var starContainer = currentVersionMessageHtml.Find(".stars.vote-count-container");
 
@@ -155,15 +152,9 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
                 //extractedMessageData.InitialRevisionTs
                 //extractedMessageData.MessageRevisions
+
+                return extractedMessageData;
             }
-        }
-
-        private User GetUserData(int profileId)
-        {
-            var url = new StackOverflowChatProfileUrl(profileId);
-            var html = CQ.Create(url.DownloadHtml());
-
-
         }
 
         private Room GetRoomData(int roomId)
