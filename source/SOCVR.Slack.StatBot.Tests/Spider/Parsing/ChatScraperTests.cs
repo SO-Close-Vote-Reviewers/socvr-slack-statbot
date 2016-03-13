@@ -22,17 +22,22 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
             cs = new ChatScraper(downloader);
         }
 
-        [Test]
-        public void ParseMessage_AuthorId()
+        [TestCase(29290954, 41570, 5292302)]
+        [TestCase(29310752, 41570, 1043380)]
+        public void ParseMessage_AuthorId(int messageId, int roomId, int expectedAuthorId)
         {
-            var messageId = 29290954;
-            var roomId = 41570;
             var parsedData = cs.ParseMessage(messageId, roomId);
-
-            var expectedAuthorId = 5292302;
             var actualAuthorId = parsedData.AuthorId;
-
             Assert.AreEqual(expectedAuthorId, actualAuthorId);
+        }
+
+        [TestCase(29290954, 41570, "Petter Friberg")]
+        [TestCase(29310752, 41570, "gunr2171")]
+        public void ParseMessage_AuthorDisplayName(int messageId, int roomId, string expectedAuthorDisplayName)
+        {
+            var parsedData = cs.ParseMessage(messageId, roomId);
+            var actualAuthorDisplayName = parsedData.AuthorDisplayName;
+            Assert.AreEqual(expectedAuthorDisplayName, actualAuthorDisplayName);
         }
     }
 }
