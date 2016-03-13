@@ -1,4 +1,5 @@
 ﻿using CsQuery;
+using Microsoft.Data.Entity;
 using SOCVR.Slack.StatBot.Database;
 using SOCVR.Slack.StatBot.Frontend;
 using SOCVR.Slack.StatBot.Spider.Parsing.Url;
@@ -55,9 +56,146 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             }
         }
 
-        public Message ParseTranscriptPage(StackOverflowChatTranscriptUrl url)
+        public void ParseTranscriptPage(StackOverflowChatTranscriptUrl url)
         {
-            throw new NotImplementedException();
+            var documentHtml = url.DownloadHtml();
+            var parsedDoc = CQ.Create(documentHtml);
+
+            using (var db = new MessageStorage())
+            {
+                var monologues = parsedDoc.Find("#transcript > .monologue");
+
+                foreach (var monologue in monologues)
+                {
+                    foreach (var message in monologue.Cq().Find(".messages .message"))
+                    {
+                        var messageId = message.Attributes["id"].Replace("message-", "").Parse<int>();
+
+                        //have we already parsed this message?
+                        var messageAlreadyParsed = db.Messages.Any(x => x.MessageId == messageId);
+
+                        if (!messageAlreadyParsed)
+                        {
+                            ParseMessage(messageId, url);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Parse the message and save info to the database.
+        /// </summary>
+        /// <param name="messageId"></param>
+        private void ParseMessage(int messageId, StackOverflowChatTranscriptUrl transcriptUrl)
+        {
+            using (var db = new MessageStorage())
+            {
+                //get the history page
+                var historyUrl = new StackOverflowChatMessageHistoryUrl(messageId);
+                var historyPageHtml = CQ.Create(historyUrl.DownloadHtml());
+
+                var extractedMessageData = new Message();
+
+                var currentVersionMonologue = historyPageHtml.Find("#content .monologue").First();
+                var currentVersionMessageHtml = currentVersionMonologue.Find($"#message-{messageId}");
+
+                extractedMessageData.CurrentHtmlContent = currentVersionMessageHtml.Find(".content").Html().Trim();
+                extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
+                
+                extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
+                extractedMessageData.MessageId = currentVersionMessageHtml.Attr("id").Replace("message-", "").Parse<int>();
+                
+                extractedMessageData.OneboxType = GetOneboxTypeForMessage(currentVersionMessageHtml);
+
+                var authorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
+                var dbAuthor = db.Users
+                    .Include(x => x.Aliases)
+                    .SingleOrDefault(x => x.ProfileId == authorId);
+
+                if (dbAuthor == null)
+                {
+                    dbAuthor = GetUserData(authorId);
+                }
+
+                //extractedMessageData.OriginalPoster
+                extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
+
+                var dbRoom = db.Rooms.SingleOrDefault(x => x.RoomId == transcriptUrl.RoomId);
+
+                if (dbRoom == null)
+                {
+                    //make it
+                    dbRoom = GetRoomData(transcriptUrl.RoomId);
+                }
+
+                extractedMessageData.Room = dbRoom;
+
+                var starContainer = currentVersionMessageHtml.Find(".stars.vote-count-container");
+
+                if (starContainer.Any())
+                {
+                    // There is at least one star on the message.
+                    var rawStarCount = starContainer.Find(".times").Text();
+
+                    // If it's an empty string then the count is one. Else parse the number.
+                    extractedMessageData.StarCount = rawStarCount == ""
+                        ? 1
+                        : rawStarCount.Parse<int>();
+                }
+                else
+                {
+                    // There are no stars.
+                    extractedMessageData.StarCount = 0;
+                }
+
+                //extractedMessageData.Tags
+
+
+
+                //extractedMessageData.InitialRevisionTs
+                //extractedMessageData.MessageRevisions
+            }
+        }
+
+        private User GetUserData(int profileId)
+        {
+            var url = new StackOverflowChatProfileUrl(profileId);
+            var html = CQ.Create(url.DownloadHtml());
+
+
+        }
+
+        private Room GetRoomData(int roomId)
+        {
+            var roomUrl = new StackOverflowChatRoomInfoUrl(roomId);
+            var roomHtml = CQ.Create(roomUrl.DownloadHtml());
+
+            var room = new Room();
+            room.RoomId = roomId;
+            room.Description = roomHtml.Find($"#room-{roomId} p").First().Text();
+            room.Name = roomHtml.Find($"#room-{roomId} h1").First().Text();
+
+            return room;
+        }
+
+        private OneboxType? GetOneboxTypeForMessage(CQ messageHtml)
+        {
+            var contentElement = messageHtml.Find(".content");
+            var oneboxElement = contentElement.Children(".onebox").SingleOrDefault();
+
+            if (oneboxElement == null)
+                return null;
+
+            var rawOneboxType = oneboxElement.Classes.Last();
+
+            var matchingOneboxType = Enum.GetValues(typeof(OneboxType))
+                .OfType<OneboxType>()
+                .Where(x => x.GetAttributeValue<CssClassValueAttribute>().ClassName == rawOneboxType)
+                .Select(x => (OneboxType?)x)
+                .SingleOrDefault();
+
+            return matchingOneboxType;
         }
 
         /// <summary>

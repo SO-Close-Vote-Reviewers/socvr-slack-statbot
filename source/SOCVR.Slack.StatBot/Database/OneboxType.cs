@@ -8,43 +8,43 @@ namespace SOCVR.Slack.StatBot.Database
 {
     enum OneboxType
     {
-        //[CssClassValue("ob-post")]
+        [CssClassValue("ob-post")]
         Post, //ob-post
 
-        //[CssClassValue("ob-message")]
+        [CssClassValue("ob-message")]
         ChatMesssage, //ob-message
 
-        //[CssClassValue("ob-user")]
+        [CssClassValue("ob-user")]
         User, //ob-user
 
-        //[CssClassValue("ob-image")]
+        [CssClassValue("ob-image")]
         Image, //ob-image
 
-        //[CssClassValue("ob-wikipedia")]
+        [CssClassValue("ob-wikipedia")]
         Wikipedia, //ob-wikipedia
 
-        //[CssClassValue("ob-amazon")]
+        [CssClassValue("ob-amazon")]
         Amazon, //ob-amazon
 
-        //[CssClassValue("ob-blog")]
+        [CssClassValue("ob-blog")]
         Blog, //ob-blog
 
-        //[CssClassValue("ob-youtube")]
+        [CssClassValue("ob-youtube")]
         Youtube, //ob-youtube
 
-        //[CssClassValue("ob-tweet")]
+        [CssClassValue("ob-tweet")]
         Tweet, //ob-tweet
 
-        //[CssClassValue("ob-job")]
+        [CssClassValue("ob-job")]
         JobPosting, //ob-job
 
-        //[CssClassValue("ob-lpadbug")]
+        [CssClassValue("ob-lpadbug")]
         LaunchpadBug, //ob-lpadbug
 
-        //[CssClassValue("ob-manpage")]
+        [CssClassValue("ob-manpage")]
         ManualPage, //ob-manpage
 
-        //[CssClassValue("ob-xkcd")]
+        [CssClassValue("ob-xkcd")]
         XKCD, //ob-xkcd
 
         /* Note, there are some types of "one-boxes" that are not included here:
@@ -54,5 +54,15 @@ namespace SOCVR.Slack.StatBot.Database
         * - Twitpic, because it seems to be dead
         * - Chat rooms and chat bookmarks, they are technicly not one-boxes
         */
+    }
+
+    class CssClassValueAttribute : Attribute
+    {
+        public string ClassName { get; private set; }
+
+        public CssClassValueAttribute(string className)
+        {
+            ClassName = className;
+        }
     }
 }

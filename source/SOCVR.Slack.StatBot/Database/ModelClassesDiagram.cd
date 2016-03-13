@@ -2,15 +2,15 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SOCVR.Slack.StatBot.Database.Message">
     <Position X="0.5" Y="2.25" Width="2.25" />
-    <AssociationLine Name="OriginalPoster" Type="SOCVR.Slack.StatBot.Database.UserAlias">
+    <AssociationLine Name="Author" Type="SOCVR.Slack.StatBot.Database.UserAlias">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.058" Y="-0.242" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="OneboxType" Type="SOCVR.Slack.StatBot.Database.OneboxType" FixedFromPoint="true">
       <Path>
-        <Point X="2.75" Y="3.562" />
-        <Point X="9.5" Y="3.562" />
+        <Point X="2.75" Y="3.658" />
+        <Point X="9.5" Y="3.658" />
       </Path>
     </AssociationLine>
     <AssociationLine Name="MessageRevisions" Type="SOCVR.Slack.StatBot.Database.MessageRevision">
@@ -19,11 +19,11 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAgCACAAAIAAABABAAgCAEAAAAAEQEAAAAAgAAAAA=</HashCode>
+      <HashCode>AAAAgAACAAAIAAARgBAAACAEAAAAAEQEABAAAgAAAAA=</HashCode>
       <FileName>Database\Message.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="OriginalPoster" />
+      <Property Name="Author" />
       <Property Name="Room" />
       <Property Name="OneboxType" />
     </ShowAsAssociation>

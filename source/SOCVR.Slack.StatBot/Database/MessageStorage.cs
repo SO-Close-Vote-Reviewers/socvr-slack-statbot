@@ -45,9 +45,9 @@ namespace SOCVR.Slack.StatBot.Database
 
             //foreign keys
             modelBuilder.Entity<Message>()
-                .HasOne(m => m.OriginalPoster)
+                .HasOne(m => m.Author)
                 .WithMany(a => a.Messages)
-                .HasForeignKey(m => m.OriginalPosterId);
+                .HasForeignKey(m => m.AuthorId);
 
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Room)

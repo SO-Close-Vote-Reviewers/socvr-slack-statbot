@@ -11,13 +11,13 @@ namespace SOCVR.Slack.StatBot.Database
         /// <summary>
         /// The id number for the message as set by Stack Overflow.
         /// </summary>
-        public int MessageId { get; set; }
+        public long MessageId { get; set; }
 
         /// <summary>
         /// The user (by display name) who posted the message.
         /// </summary>
-        public UserAlias OriginalPoster { get; set; }
-        public int OriginalPosterId { get; set; }
+        public UserAlias Author { get; set; }
+        public int AuthorId { get; set; }
 
         /// <summary>
         /// The room this message was posted in.
@@ -26,9 +26,14 @@ namespace SOCVR.Slack.StatBot.Database
         public int RoomId { get; set; }
 
         /// <summary>
-        /// The text of the latest revision of the message.
+        /// The text of the latest revision of the message. This removes any html formatting
         /// </summary>
         public string CurrentText { get; set; }
+
+        /// <summary>
+        /// The html of the latest revision of the message.
+        /// </summary>
+        public string CurrentHtmlContent { get; set; }
 
         /// <summary>
         /// The date and time of the initial message posting.
@@ -41,7 +46,7 @@ namespace SOCVR.Slack.StatBot.Database
         public OneboxType? OneboxType { get; set; }
 
         /// <summary>
-        /// The number of plain text links in the mesage. Note that this excludes any clickable one-box clickable items, or links within oneboxes.
+        /// The number of plain text links in the message. Note that this excludes any clickable one-box items, or links within oneboxes.
         /// </summary>
         public int PlainTextLinkCount { get; set; }
 

@@ -8,10 +8,12 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing.Url
 {
     class StackOverflowChatProfileUrl : StackOverflowChatUrl
     {
+        public int ProfileId { get; private set; }
+
         public StackOverflowChatProfileUrl(int profileId)
             : base($"users/{profileId}")
         {
-
+            ProfileId = profileId;
         }
     }
 }

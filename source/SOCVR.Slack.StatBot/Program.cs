@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using SOCVR.Slack.StatBot.Frontend.Responders;
+using SOCVR.Slack.StatBot.Spider.Parsing;
+using SOCVR.Slack.StatBot.Spider.Parsing.Url;
 
 namespace SOCVR.Slack.StatBot
 {
@@ -15,6 +17,15 @@ namespace SOCVR.Slack.StatBot
 
         static void Main(string[] args)
         {
+            //testing
+
+            var cs = new ChatScraper();
+            var url = new StackOverflowChatTranscriptUrl(41570, new DateTime(2016, 3, 12));
+            cs.ParseTranscriptPage(url);
+
+            //end testing
+
+
             using (var db = new MessageStorage())
             {
                 Console.WriteLine("Initializing database.");

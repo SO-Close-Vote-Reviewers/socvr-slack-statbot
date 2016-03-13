@@ -21,7 +21,7 @@ namespace SOCVR.Slack.StatBot.Frontend
             using (var db = new MessageStorage())
             {
                 var userMessages = db.Messages
-                    .Where(x => x.OriginalPoster.User.ProfileId == userID);
+                    .Where(x => x.Author.User.ProfileId == userID);
 
                 // Does the user have at least 1000 all-time messages?
                 var totalMessageCount = userMessages.Count();

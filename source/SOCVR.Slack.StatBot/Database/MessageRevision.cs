@@ -12,7 +12,7 @@ namespace SOCVR.Slack.StatBot.Database
     class MessageRevision
     {
         public Message Message { get; set; }
-        public int MessageId { get; set; }
+        public long MessageId { get; set; }
 
         public int RevisionNumber { get; set; }
 

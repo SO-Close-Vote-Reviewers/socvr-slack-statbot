@@ -56,7 +56,7 @@ namespace SOCVR.Slack.StatBot.Frontend.Responders
 
                 // Group by user.
                 var messagesGroupedByUser = chatMessages
-                    .GroupBy(x => x.OriginalPoster.User)
+                    .GroupBy(x => x.Author.User)
                     .Select(x => new
                     {
                         User = x.Key,
