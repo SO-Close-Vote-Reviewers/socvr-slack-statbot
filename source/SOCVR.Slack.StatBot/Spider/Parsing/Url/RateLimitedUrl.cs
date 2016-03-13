@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SOCVR.Slack.StatBot.Parsing.Url
+namespace SOCVR.Slack.StatBot.Spider.Parsing.Url
 {
     abstract class RateLimitedUrl
     {

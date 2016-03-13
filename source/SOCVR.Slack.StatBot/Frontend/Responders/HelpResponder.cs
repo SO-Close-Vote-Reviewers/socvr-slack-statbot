@@ -1,7 +1,7 @@
 ﻿using MargieBot.Responders;
 using MargieBot.Models;
 
-namespace SOCVR.Slack.StatBot.Responders
+namespace SOCVR.Slack.StatBot.Frontend.Responders
 {
     class HelpResponder : IResponder
     {

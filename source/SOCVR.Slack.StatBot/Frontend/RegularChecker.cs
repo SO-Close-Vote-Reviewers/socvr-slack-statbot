@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SOCVR.Slack.StatBot.Database;
 
-namespace SOCVR.Slack.StatBot
+namespace SOCVR.Slack.StatBot.Frontend
 {
     /// <summary>
     /// Checks if a given chat user is considered a "regular".

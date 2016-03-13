@@ -6,11 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using MargieBot.Models;
 using System.Text.RegularExpressions;
-using SOCVR.Slack.StatBot.CommandSettings;
+using SOCVR.Slack.StatBot.Frontend.CommandSettings;
 using System.Threading;
-using SOCVR.Slack.StatBot.DataFormatters;
+using SOCVR.Slack.StatBot.Frontend.DataFormatters;
+using SOCVR.Slack.StatBot.Spider.Parsing;
 
-namespace SOCVR.Slack.StatBot.Responders
+namespace SOCVR.Slack.StatBot.Frontend.Responders
 {
     class DateRangeStatsResponder : IResponder
     {

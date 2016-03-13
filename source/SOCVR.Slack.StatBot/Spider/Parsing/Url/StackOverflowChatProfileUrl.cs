@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SOCVR.Slack.StatBot.Parsing.Url
+namespace SOCVR.Slack.StatBot.Spider.Parsing.Url
 {
     class StackOverflowChatProfileUrl : StackOverflowChatUrl
     {

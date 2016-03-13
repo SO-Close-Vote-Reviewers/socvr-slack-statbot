@@ -1,12 +1,13 @@
 ﻿using CsQuery;
 using SOCVR.Slack.StatBot.Database;
-using SOCVR.Slack.StatBot.Parsing.Url;
+using SOCVR.Slack.StatBot.Frontend;
+using SOCVR.Slack.StatBot.Spider.Parsing.Url;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TCL.Extensions;
 
-namespace SOCVR.Slack.StatBot
+namespace SOCVR.Slack.StatBot.Spider.Parsing
 {
     /// <summary>
     /// 

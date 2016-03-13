@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SOCVR.Slack.StatBot.CommandSettings
+namespace SOCVR.Slack.StatBot.Frontend.CommandSettings
 {
     abstract class CommandSettings
     {

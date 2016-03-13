@@ -4,6 +4,7 @@ using SOCVR.Slack.StatBot.Database;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using SOCVR.Slack.StatBot.Frontend.Responders;
 
 namespace SOCVR.Slack.StatBot
 {
@@ -24,9 +25,9 @@ namespace SOCVR.Slack.StatBot
             var botAPIKey = SettingsAccessor.GetSetting<string>("SlackBotAPIKey");
 
             bot.Aliases = new List<string>() { "sc" };
-            bot.Responders.Add(new Responders.DayStatsResponder());
-            bot.Responders.Add(new Responders.DateRangeStatsResponder());
-            bot.Responders.Add(new Responders.HelpResponder());
+            bot.Responders.Add(new DayStatsResponder());
+            bot.Responders.Add(new DateRangeStatsResponder());
+            bot.Responders.Add(new HelpResponder());
             bot.Connect(botAPIKey);
 
             Console.CancelKeyPress += delegate

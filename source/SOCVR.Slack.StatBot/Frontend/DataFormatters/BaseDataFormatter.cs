@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SOCVR.Slack.StatBot.DataFormatters
+namespace SOCVR.Slack.StatBot.Frontend.DataFormatters
 {
     abstract class BaseDataFormatter
     {

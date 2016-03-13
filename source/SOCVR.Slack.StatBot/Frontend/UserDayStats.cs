@@ -1,4 +1,4 @@
-﻿namespace SOCVR.Slack.StatBot
+﻿namespace SOCVR.Slack.StatBot.Frontend
 {
     class UserDayStats
     {
