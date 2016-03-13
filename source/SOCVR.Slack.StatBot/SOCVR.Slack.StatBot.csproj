@@ -167,10 +167,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatMessageInfo.cs" />
-    <Compile Include="CommandSettings\CommandSettings.cs" />
-    <Compile Include="CommandSettings\DayStatsSettings.cs" />
-    <Compile Include="CommandSettings\RangeStatsSettings.cs" />
     <Compile Include="Database\ParsedTranscriptPage.cs" />
     <Compile Include="Database\UserAlias.cs" />
     <Compile Include="Database\Message.cs" />
@@ -179,13 +175,22 @@
     <Compile Include="Database\OneboxType.cs" />
     <Compile Include="Database\Room.cs" />
     <Compile Include="Database\User.cs" />
-    <Compile Include="DataFormatters\BaseDataFormatter.cs" />
-    <Compile Include="DataFormatters\CvPlsDataFormatter.cs" />
-    <Compile Include="DataFormatters\FullTableDataFormatter.cs" />
-    <Compile Include="DataFormatters\LinksDataFormatter.cs" />
-    <Compile Include="DataFormatters\OneBoxeDataFormatter.cs" />
-    <Compile Include="DataFormatters\StarsDataFormatter.cs" />
-    <Compile Include="DataFormatters\TotalsDataFormatter.cs" />
+    <Compile Include="Frontend\ChatMessageInfo.cs" />
+    <Compile Include="Frontend\CommandSettings\CommandSettings.cs" />
+    <Compile Include="Frontend\CommandSettings\DayStatsSettings.cs" />
+    <Compile Include="Frontend\CommandSettings\RangeStatsSettings.cs" />
+    <Compile Include="Frontend\DataFormatters\BaseDataFormatter.cs" />
+    <Compile Include="Frontend\DataFormatters\CvPlsDataFormatter.cs" />
+    <Compile Include="Frontend\DataFormatters\FullTableDataFormatter.cs" />
+    <Compile Include="Frontend\DataFormatters\LinksDataFormatter.cs" />
+    <Compile Include="Frontend\DataFormatters\OneBoxeDataFormatter.cs" />
+    <Compile Include="Frontend\DataFormatters\StarsDataFormatter.cs" />
+    <Compile Include="Frontend\DataFormatters\TotalsDataFormatter.cs" />
+    <Compile Include="Frontend\RegularChecker.cs" />
+    <Compile Include="Frontend\Responders\DateRangeStatsResponder.cs" />
+    <Compile Include="Frontend\Responders\DayStatsResponder.cs" />
+    <Compile Include="Frontend\Responders\HelpResponder.cs" />
+    <Compile Include="Frontend\UserDayStats.cs" />
     <Compile Include="Migrations\20160123173240_InitialMigration.cs" />
     <Compile Include="Migrations\20160123173240_InitialMigration.designer.cs">
       <DependentUpon>20160123173240_InitialMigration.cs</DependentUpon>
@@ -195,21 +200,16 @@
       <DependentUpon>20160124200136_AddParsedTranscriptPageTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
-    <Compile Include="Parsing\ChatScraper.cs" />
-    <Compile Include="Parsing\Url\RateLimitedUrl.cs" />
-    <Compile Include="Parsing\Url\StackOverflowChatProfileUrl.cs" />
-    <Compile Include="Parsing\Url\StackOverflowChatTranscriptUrl.cs" />
-    <Compile Include="Parsing\Url\StackOverflowChatUrl.cs" />
-    <Compile Include="Parsing\Url\StackOverflowUrl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegularChecker.cs" />
-    <Compile Include="Responders\DateRangeStatsResponder.cs" />
-    <Compile Include="Responders\DayStatsResponder.cs" />
-    <Compile Include="Responders\HelpResponder.cs" />
     <Compile Include="SettingsAccessor.cs" />
+    <Compile Include="Spider\Parsing\ChatScraper.cs" />
+    <Compile Include="Spider\Parsing\Url\RateLimitedUrl.cs" />
+    <Compile Include="Spider\Parsing\Url\StackOverflowChatProfileUrl.cs" />
+    <Compile Include="Spider\Parsing\Url\StackOverflowChatTranscriptUrl.cs" />
+    <Compile Include="Spider\Parsing\Url\StackOverflowChatUrl.cs" />
+    <Compile Include="Spider\Parsing\Url\StackOverflowUrl.cs" />
     <Compile Include="TableParser.cs" />
-    <Compile Include="UserDayStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
