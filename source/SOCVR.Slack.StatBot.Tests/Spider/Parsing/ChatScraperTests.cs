@@ -26,51 +26,36 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
             testLocation = TestContext.CurrentContext.TestDirectory;
         }
 
-        [TestCase(29290954, 41570, 5292302)]
-        [TestCase(29310752, 41570, 1043380)]
+        [TestCaseSource("Generate_ParseMessage_AuthorId")]
         public void ParseMessage_AuthorId(int messageId, int roomId, int expectedAuthorId)
         {
             TestParseMessageReturnData(messageId, roomId, expectedAuthorId, (x) => x.AuthorId);
         }
 
-        [TestCase(29290954, 41570, "Petter Friberg")]
-        [TestCase(29310752, 41570, "gunr2171")]
+        [TestCaseSource("Generate_ParseMessage_AuthorDisplayName")]
         public void ParseMessage_AuthorDisplayName(int messageId, int roomId, string expectedAuthorDisplayName)
         {
             TestParseMessageReturnData(messageId, roomId, expectedAuthorDisplayName, (x) => x.AuthorDisplayName);
         }
 
-        [TestCase(29290954, 41570, "@gunr2171 When do you elect?")]
-        [TestCase(29310752, 41570, "test one two three four")]
-        [TestCase(29306690, 41570, "delv-pls [turtle] Cleanup 10 11 12")]
+        [TestCaseSource("Generate_ParseMessage_CurrentText")]
         public void ParseMessage_CurrentText(int messageId, int roomId, string expectedCurrentText)
         {
             TestParseMessageReturnData(messageId, roomId, expectedCurrentText, (x) => x.CurrentText);
         }
 
-        [TestCase(29290954, 41570, false)]
-        [TestCase(29310752, 41570, false)]
-        [TestCase(29306690, 41570, false)]
-        [TestCase(29271581, 41570, true)]
+        [TestCaseSource("Generate_ParseMessage_IsCloseVoteRequest")]
         public void ParseMessage_IsCloseVoteRequest(int messageId, int roomId, bool expectedValue)
         {
             TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.IsCloseVoteRequest);
         }
 
-        [TestCase(29290954, 41570)]
-        [TestCase(29310752, 41570)]
-        [TestCase(29306690, 41570)]
-        [TestCase(29271581, 41570)]
+        [TestCaseSource("Generate_ParseMessage_MessageId")]
         public void ParseMessage_MessageId(int messageId, int roomId)
         {
             TestParseMessageReturnData(messageId, roomId, messageId, (x) => x.MessageId);
         }
 
-        //[TestCase(29290954, 41570, null)]
-        //[TestCase(29310752, 41570, null)]
-        //[TestCase(29306690, 41570, null)]
-        //[TestCase(29271581, 41570, null)]
-        //[TestCase(29310780, 41570, "ob-post")]
         [TestCaseSource("Generate_ParseMessage_RawOneBoxName")]
         public void ParseMessage_RawOneBoxName(int messageId, int roomId, string expectedValue)
         {
@@ -84,28 +69,70 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
             Assert.AreEqual(expected, actual);
         }
 
-        public static IEnumerable<TestCaseData> Generate_ParseMessage_RawOneBoxName
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_RawOneBoxName()
         {
-            get
-            {
-                var dir = AppDomain.CurrentDomain.BaseDirectory;
-
-                foreach (var messageId in RegisteryAccessor.GetMessageIds(dir))
-                {
-                    var data = RegisteryAccessor.GetRegisteryDataForMessage(dir, messageId);
-                    yield return new TestCaseData(data["MessageId"].Value<int>(), data["RoomId"].Value<int>(), data["RawOneboxName"].Value<string>());
-                }
-            }
+            return GenerateTestCases<string>("RawOneboxName");
         }
-    }
 
-    class ChatScraperTestsFactory
-    {
-        public static IEnumerable<TestCaseData> ParseMessage_RawOneBoxName(string testDirectory)
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_AuthorDisplayName()
         {
-            var data = RegisteryAccessor.GetRegisteryDataForMessage(testDirectory, 29290954);
+            return GenerateTestCases<string>("AuthorDisplayName");
+        }
 
-            yield return new TestCaseData(data["MessageId"], data["RoomId"], data["RawOneboxName"]);
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_AuthorId()
+        {
+            return GenerateTestCases<int>("AuthorId");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_CurrentMarkdownContent()
+        {
+            return GenerateTestCases<string>("CurrentMarkdownContent");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_CurrentText()
+        {
+            return GenerateTestCases<string>("CurrentText");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_IsCloseVoteRequest()
+        {
+            return GenerateTestCases<bool>("IsCloseVoteRequest");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_MessageId()
+        {
+            return GenerateTestCases<int>("MessageId");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_PlainTextLinkCount()
+        {
+            return GenerateTestCases<int>("PlainTextLinkCount");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_RoomId()
+        {
+            return GenerateTestCases<int>("RoomId");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_StarCount()
+        {
+            return GenerateTestCases<int>("StarCount");
+        }
+
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_TagsCount()
+        {
+            return GenerateTestCases<int>("TagsCount");
+        }
+
+        private static IEnumerable<TestCaseData> GenerateTestCases<TExpected>(string expectedKey)
+        {
+            var dir = AppDomain.CurrentDomain.BaseDirectory;
+
+            foreach (var messageId in RegisteryAccessor.GetMessageIds(dir))
+            {
+                var data = RegisteryAccessor.GetRegisteryDataForMessage(dir, messageId);
+                yield return new TestCaseData(data["MessageId"].Value<int>(), data["RoomId"].Value<int>(), data[expectedKey].Value<TExpected>());
+            }
         }
     }
 }
