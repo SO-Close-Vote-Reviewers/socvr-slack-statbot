@@ -110,5 +110,37 @@
     "RoomId": 68414,
     "StarCount": 2,
     "TagsCount": 0
+  },
+  {
+    "Type": "Message",
+    "Url": "http://chat.stackoverflow.com/messages/21978883/history",
+    "FilePath": "DownloadedPages\\MessageHistory\\21978883.html",
+    "AuthorDisplayName": "Feeds",
+    "AuthorId": -2,
+    "CurrentMarkdownContent": "*[rene](http://chat.stackoverflow.com/users/578411/rene) has removed an event from [this room's schedule](http://chat.stackoverflow.com/rooms/info/41570/so-close-vote-reviewers?tab=schedule).*",
+    "CurrentText": "rene has removed an event from this room's schedule.",
+    "IsCloseVoteRequest": false,
+    "MessageId": 21978883,
+    "RawOneboxName": null,
+    "PlainTextLinkCount": 2,
+    "RoomId": 41570,
+    "StarCount": 0,
+    "TagsCount": 0
+  },
+  {
+    "Type": "Message",
+    "Url": "http://chat.stackoverflow.com/messages/27862166/history",
+    "FilePath": "DownloadedPages\\MessageHistory\\27862166.html",
+    "AuthorDisplayName": "gunr2171",
+    "AuthorId": 1043380,
+    "CurrentMarkdownContent": "Yes, we can edit chat messages",
+    "CurrentText": "Yes, we can edit chat messages",
+    "IsCloseVoteRequest": false,
+    "MessageId": 27862166,
+    "RawOneboxName": null,
+    "PlainTextLinkCount": 0,
+    "RoomId": 41570,
+    "StarCount": 0,
+    "TagsCount": 0
   }
 ]
