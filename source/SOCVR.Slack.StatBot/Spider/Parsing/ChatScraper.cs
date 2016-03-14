@@ -134,7 +134,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
         private DateTime GetInitialTimestamp(CQ dom)
         {
             var tsStr = dom[".monologue .timestamp"].Last().Text();
-            var m = Regex.Match(tsStr, @"^([A-Za-z]{3,3} )?(\d+ )?('\d+ )?(\d+:\d+) (AM|PM)$");
+            var m = Regex.Match(tsStr, @"^([A-Za-z]{3,3} )?(\d+ )?('\d+ )?(\d+):(\d+) (AM|PM)$");
 
             if (!m.Success)
             {
@@ -146,7 +146,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 return DateTime.Parse(tsStr);
             }
 
-            if (m.Groups[1].Value == "yst")
+            if (m.Groups[1].Value.Trim() == "yst")
             {
                 return DateTime.Parse(tsStr.Remove(0, 4)).AddDays(-1);
             }
@@ -158,12 +158,12 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 {
                     dt = dt.AddDays(-1);
 
-                    if (dt.DayOfWeek.ToString().StartsWith(m.Groups[1].Value)) break;
+                    if (dt.DayOfWeek.ToString().StartsWith(m.Groups[1].Value.Trim())) break;
                 }
-                dt.AddHours(m.Groups[4].Value.Parse<int>() + (m.Groups[6].Value == "PM" ? 12 : 0));
-                dt.AddMinutes(m.Groups[5].Value.Parse<int>());
+                dt = dt.AddHours(int.Parse(m.Groups[4].Value) + (m.Groups[6].Value == "PM" ? 12 : 0));
+                dt = dt.AddMinutes(int.Parse(m.Groups[5].Value));
 
-                return DateTime.Parse(tsStr);
+                return dt;
             }
 
             var yy = string.IsNullOrEmpty(m.Groups[3].Value) ? "" : "yy ";
