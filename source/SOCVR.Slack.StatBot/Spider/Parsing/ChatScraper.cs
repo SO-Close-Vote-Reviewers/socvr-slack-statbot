@@ -145,13 +145,12 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
             for (var i = 1; i < revsDom.Length; i++)
             {
-                var revNode = revsDom[i];
-                var revDom = revsDom[revNode];
+                var revDom = revsDom[i].Cq();
 
                 revs.Add(new ParsedMessageRevision
                 {
                     RevisionNumber = (revsDom.Length - 1) - i, // 0-based index.
-                    AuthorId = revNode.Classes.Last().Replace("user-", "").Parse<int>(),
+                    AuthorId = revsDom[i].Classes.Last().Replace("user-", "").Parse<int>(),
                     DisplayName = revDom.Find(".signature .username a").Attr("title"),
                     MessageText = RemoveSaidEdited(revDom.Find(".content").Text(), true),
 
