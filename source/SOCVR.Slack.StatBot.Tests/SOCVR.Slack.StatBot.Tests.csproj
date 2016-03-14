@@ -75,6 +75,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
+    <Content Include="DownloadedPages\MessageHistory\29333825.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DownloadedPages\MessageHistory\29333849.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="DownloadedPages\registery.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

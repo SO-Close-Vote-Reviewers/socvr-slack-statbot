@@ -78,5 +78,37 @@
     "RoomId": 41570,
     "StarCount": 0,
     "TagsCount": 0
+  },
+  {
+    "Type": "Message",
+    "Url": "http://chat.stackoverflow.com/messages/29333825/history",
+    "FilePath": "DownloadedPages\\MessageHistory\\29333825.html",
+    "AuthorDisplayName": "gunr2171",
+    "AuthorId": 1043380,
+    "CurrentMarkdownContent": "this is an example message that has been pinned but has no other stars",
+    "CurrentText": "this is an example message that has been pinned but has no other stars",
+    "IsCloseVoteRequest": false,
+    "MessageId": 29333825,
+    "RawOneboxName": null,
+    "PlainTextLinkCount": 0,
+    "RoomId": 68414,
+    "StarCount": 1,
+    "TagsCount": 0
+  },
+  {
+    "Type": "Message",
+    "Url": "http://chat.stackoverflow.com/messages/29333849/history",
+    "FilePath": "DownloadedPages\\MessageHistory\\29333849.html",
+    "AuthorDisplayName": "gunr2171",
+    "AuthorId": 1043380,
+    "CurrentMarkdownContent": "this is an example message that has been pinned and has a star count of 2",
+    "CurrentText": "this is an example message that has been pinned and has a star count of 2",
+    "IsCloseVoteRequest": false,
+    "MessageId": 29333849,
+    "RawOneboxName": null,
+    "PlainTextLinkCount": 0,
+    "RoomId": 68414,
+    "StarCount": 2,
+    "TagsCount": 0
   }
 ]
