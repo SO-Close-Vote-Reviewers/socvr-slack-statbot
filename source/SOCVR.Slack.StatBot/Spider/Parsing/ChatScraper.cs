@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TCL.Extensions;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace SOCVR.Slack.StatBot.Spider.Parsing
 {
@@ -103,24 +105,26 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             var currentVersionMonologue = historyPageHtml.Find("#content .monologue").First();
             var currentVersionMessageHtml = currentVersionMonologue.Find($"#message-{messageId}");
 
-            extractedMessageData.AuthorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
-            extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
-
-            //extractedMessageData.CurrentMarkdownContent = currentVersionMessageHtml.Find(".content").Html().Trim();
-            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
-
             var initialRevisionTimeRaw = historyPageHtml
                 .Find("#content .monologue")
                 .Last()
                 .Find(".timestamp")
                 .Text();
 
-            // parse chat time stamp for init rev
-            //extractedMessageData.InitialRevisionTs = DateTimeOffset.Now + TimeSpan.Parse(initialRevisionTimeRaw);
-
-            extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
+            // Basic message meta info.
+            extractedMessageData.RoomId = roomId;
             extractedMessageData.MessageId = messageId;
+            extractedMessageData.AuthorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
+            extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
+            extractedMessageData.StarCount = GetStarsOrPins(historyPageHtml);
+            extractedMessageData.Revisions = GetRevisions(historyPageHtml);
+            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
+            extractedMessageData.CurrentMarkdownContent = extractedMessageData.Revisions.Last().MessageText;
+            extractedMessageData.InitialRevisionTs = GetInitialTimestamp(historyPageHtml);
 
+            // Bot-specific message meta data.
+            extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
+            extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
             extractedMessageData.RawOneboxName = currentVersionMessageHtml
                 .Find(".content")
                 .Children(".onebox")
@@ -128,14 +132,51 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 ?.Classes
                 ?.Last();
 
-            extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
-            extractedMessageData.RoomId = roomId;
-            extractedMessageData.StarCount = GetStarsOrPins(historyPageHtml);
-            extractedMessageData.Revisions = GetRevisions(historyPageHtml);
-
             //extractedMessageData.TagsCount
 
             return extractedMessageData;
+        }
+
+        private DateTime GetInitialTimestamp(CQ dom)
+        {
+            var tsStr = dom[".monologue .timestamp"].Last().Text();
+            var m = Regex.Match(tsStr, @"^([A-Za-z]{3,3} )?(\d+ )?('\d+ )?(\d+:\d+) (AM|PM)$");
+
+            if (!m.Success)
+            {
+                throw new Exception("Invalid date specified.");
+            }
+
+            if (string.IsNullOrEmpty(m.Groups[1].Value))
+            {
+                return DateTime.Parse(tsStr);
+            }
+
+            if (m.Groups[1].Value == "yst")
+            {
+                return DateTime.Parse(tsStr.Remove(0, 4)).AddDays(-1);
+            }
+
+            if (Regex.IsMatch(m.Groups[1].Value, @"Mon|Tue|Wed|Thu|Fri|Sat|Sun"))
+            {
+                var dt = DateTime.UtcNow.Date;
+                for (var i = 0; i < 7; i++)
+                {
+                    dt = dt.AddDays(-1);
+
+                    if (dt.DayOfWeek.ToString().StartsWith(m.Groups[1].Value)) break;
+                }
+                dt.AddHours(m.Groups[4].Value.Parse<int>() + (m.Groups[6].Value == "PM" ? 12 : 0));
+                dt.AddMinutes(m.Groups[5].Value.Parse<int>());
+
+                return DateTime.Parse(tsStr);
+            }
+
+            var yy = string.IsNullOrEmpty(m.Groups[3].Value) ? "" : "yy ";
+            var h = m.Groups[4].Length == 2 ? "h" : "";
+            var pattern = $"MMM dd {yy}{h}h:mm tt";
+
+            return DateTime.ParseExact(tsStr.Replace("'", ""), pattern, CultureInfo.InvariantCulture);
         }
 
         private List<ParsedMessageRevision> GetRevisions(CQ dom)
