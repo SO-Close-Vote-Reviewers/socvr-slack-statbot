@@ -38,6 +38,11 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
             return GenerateTestCases<string>("CurrentText");
         }
 
+        public static IEnumerable<TestCaseData> Generate_ParseMessage_InitialRevisionTs()
+        {
+            return GenerateTestCases<DateTimeOffset>("InitialRevisionTs");
+        }
+
         public static IEnumerable<TestCaseData> Generate_ParseMessage_IsCloseVoteRequest()
         {
             return GenerateTestCases<bool>("IsCloseVoteRequest");
@@ -95,6 +100,12 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
         public void ParseMessage_CurrentText(int messageId, int roomId, string expectedCurrentText)
         {
             TestParseMessageReturnData(messageId, roomId, expectedCurrentText, (x) => x.CurrentText);
+        }
+
+        [TestCaseSource("Generate_ParseMessage_InitialRevisionTs")]
+        public void ParseMessage_InitialRevisionTs(int messageId, int roomId, DateTimeOffset expectedValue)
+        {
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.InitialRevisionTs);
         }
 
         [TestCaseSource("Generate_ParseMessage_IsCloseVoteRequest")]
