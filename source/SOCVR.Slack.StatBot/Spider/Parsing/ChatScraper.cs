@@ -105,12 +105,6 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             var currentVersionMonologue = historyPageHtml.Find("#content .monologue").First();
             var currentVersionMessageHtml = currentVersionMonologue.Find($"#message-{messageId}");
 
-            var initialRevisionTimeRaw = historyPageHtml
-                .Find("#content .monologue")
-                .Last()
-                .Find(".timestamp")
-                .Text();
-
             // Basic message meta info.
             extractedMessageData.RoomId = roomId;
             extractedMessageData.MessageId = messageId;
