@@ -85,6 +85,12 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
             TestParseMessageReturnData(messageId, roomId, expectedAuthorId, (x) => x.AuthorId);
         }
 
+        [TestCaseSource("Generate_ParseMessage_CurrentMarkdownContent")]
+        public void ParseMessage_CurrentMarkdownContent(int messageId, int roomId, string expectedValue)
+        {
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.CurrentMarkdownContent);
+        }
+
         [TestCaseSource("Generate_ParseMessage_CurrentText")]
         public void ParseMessage_CurrentText(int messageId, int roomId, string expectedCurrentText)
         {
@@ -98,15 +104,39 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
         }
 
         [TestCaseSource("Generate_ParseMessage_MessageId")]
-        public void ParseMessage_MessageId(int messageId, int roomId)
+        public void ParseMessage_MessageId(int messageId, int roomId, int expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, messageId, (x) => x.MessageId);
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.MessageId);
+        }
+
+        [TestCaseSource("Generate_ParseMessage_PlainTextLinkCount")]
+        public void ParseMessage_PlainTextLinkCount(int messageId, int roomId, int expectedValue)
+        {
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.PlainTextLinkCount);
         }
 
         [TestCaseSource("Generate_ParseMessage_RawOneBoxName")]
         public void ParseMessage_RawOneBoxName(int messageId, int roomId, string expectedValue)
         {
             TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.RawOneboxName);
+        }
+
+        [TestCaseSource("Generate_ParseMessage_RoomId")]
+        public void ParseMessage_RoomId(int messageId, int roomId, int expectedValue)
+        {
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.RoomId);
+        }
+
+        [TestCaseSource("Generate_ParseMessage_StarCount")]
+        public void ParseMessage_StarCount(int messageId, int roomId, int expectedValue)
+        {
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.StarCount);
+        }
+
+        [TestCaseSource("Generate_ParseMessage_TagsCount")]
+        public void ParseMessage_TagsCount(int messageId, int roomId, int expectedValue)
+        {
+            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.TagsCount);
         }
 
         [SetUp]
