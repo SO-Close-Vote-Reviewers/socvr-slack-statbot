@@ -115,7 +115,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 .Find(".timestamp")
                 .Text();
 
-#warning this needs to be fixed.
+            // parse chat time stamp for init rev
             //extractedMessageData.InitialRevisionTs = DateTimeOffset.Now + TimeSpan.Parse(initialRevisionTimeRaw);
 
             extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
@@ -130,33 +130,83 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
             extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
             extractedMessageData.RoomId = roomId;
+            extractedMessageData.StarCount = GetStarsOrPins(historyPageHtml);
+            extractedMessageData.Revisions = GetRevisions(historyPageHtml);
 
-            var starContainer = currentVersionMessageHtml.Find(".stars.vote-count-container");
+            //extractedMessageData.TagsCount
 
-            if (starContainer.Any())
+            return extractedMessageData;
+        }
+
+        private List<ParsedMessageRevision> GetRevisions(CQ dom)
+        {
+            var revs = new List<ParsedMessageRevision>();
+            var revsDom = dom[".monologue"];
+
+            for (var i = 1; i < revsDom.Length; i++)
             {
-                // There is at least one star on the message.
-                var rawStarCount = starContainer.Find(".times").Text();
+                var revNode = revsDom[i];
+                var revDom = revsDom[revNode];
 
-                // If it's an empty string then the count is one. Else parse the number.
-                extractedMessageData.StarCount = rawStarCount == ""
-                    ? 1
-                    : rawStarCount.Parse<int>();
+                revs.Add(new ParsedMessageRevision
+                {
+                    RevisionNumber = (revsDom.Length - 1) - i, // 0-based index.
+                    AuthorId = revNode.Classes.Last().Replace("user-", "").Parse<int>(),
+                    DisplayName = revDom.Find(".signature .username a").Attr("title"),
+                    MessageText = RemoveSaidEdited(revDom.Find(".content").Text(), true),
+
+                    //TODO: There's no difference in output between this and the line above.
+                    //MessageHtml = RemoveSaidEdited(revDom.Find(".content").Html(), false)
+                });
+            }
+
+            return revs;
+        }
+
+        private static string RemoveSaidEdited(string t, bool html)
+        {
+            if (html)
+            {
+                if (t.StartsWith("<b>said:</b>"))
+                {
+                    return t.Remove(0, 13);
+                }
+                if (t.StartsWith("<b>edited:</b>"))
+                {
+                    return t.Remove(0, 15);
+                }
             }
             else
             {
-                // There are no stars.
-                extractedMessageData.StarCount = 0;
+                if (t.StartsWith("said:"))
+                {
+                    return t.Remove(0, 6);
+                }
+                if (t.StartsWith("edited:"))
+                {
+                    return t.Remove(0, 8);
+                }
             }
 
-            //extractedMessageData.Tags
+            return t;
+        }
 
+        private int GetStarsOrPins(CQ dom, bool stars = true)
+        {
+            var starSpan = dom[$"{(stars ? ".stars" : ".owner-star")}.vote-count-container"];
 
+            if (starSpan != null && starSpan.Length != 0)
+            {
+                var c = starSpan[".times"]?.Text();
 
-            //extractedMessageData.InitialRevisionTs
-            //extractedMessageData.MessageRevisions
+                return string.IsNullOrEmpty(c) ? 1 : int.Parse(c);
+            }
+            else
+            {
+                if (!stars) return 0;
 
-            return extractedMessageData;
+                return GetStarsOrPins(dom, false);
+            }
         }
 
         //private Room GetRoomData(int roomId)
