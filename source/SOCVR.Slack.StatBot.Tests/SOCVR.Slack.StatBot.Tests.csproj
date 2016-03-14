@@ -65,6 +65,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="DownloadedPages\MessageHistory\29271581.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DownloadedPages\MessageHistory\29306690.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="DownloadedPages\MessageHistory\29310752.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -106,7 +106,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             extractedMessageData.AuthorId = currentVersionMonologue.Single().Classes.Last().Replace("user-", "").Parse<int>();
             extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
 
-            extractedMessageData.CurrentHtmlContent = currentVersionMessageHtml.Find(".content").Html().Trim();
+            //extractedMessageData.CurrentMarkdownContent = currentVersionMessageHtml.Find(".content").Html().Trim();
             extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
 
             var initialRevisionTimeRaw = historyPageHtml

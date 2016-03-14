@@ -10,7 +10,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
     {
         public string AuthorDisplayName { get; set; }
         public int AuthorId { get; set; }
-        public string CurrentHtmlContent { get; set; }
+        public string CurrentMarkdownContent { get; set; }
         public string CurrentText { get; set; }
         public DateTimeOffset InitialRevisionTs { get; set; }
         public bool IsCloseVoteRequest { get; set; }
