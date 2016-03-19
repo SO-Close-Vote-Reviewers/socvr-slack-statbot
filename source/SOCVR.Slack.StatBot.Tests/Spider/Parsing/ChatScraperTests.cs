@@ -168,14 +168,18 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
 
                 var parsedMessageId = data["MessageId"].Value<int>();
                 var parsedRoomId = data["RoomId"].Value<int>();
-                var parsedSpiderDate = (DateTimeOffset)data["SpiderDate"].Value<DateTime>();
+
+                //json.net converts the date into the current computer's time zone
+                var spiderDateLocalTime = data["SpiderDate"].Value<DateTime>();
+                var spiderDateUTC = TimeZoneInfo.ConvertTimeToUtc(spiderDateLocalTime);
+                var parsedSpiderDate = new DateTimeOffset(spiderDateUTC, TimeSpan.Zero);
 
                 TExpected parsedValue;
 
                 if (typeof(TExpected) == typeof(DateTimeOffset))
                 {
                     var valueRaw = data[expectedKey].Value<string>();
-                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal).ToUniversalTime();
                 }
                 else
                 {

@@ -146,12 +146,12 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
             if (string.IsNullOrEmpty(m.Groups[1].Value))
             {
-                return DateTime.Parse(tsStr).AddDays(-((DateTime.UtcNow.Date - cd.Date).Days));
+                return DateTimeOffset.Parse(tsStr, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).AddDays(-((DateTime.UtcNow.Date - cd.Date).Days));
             }
 
             if (m.Groups[1].Value.Trim() == "yst")
             {
-                return DateTime.Parse(tsStr.Remove(0, 4)).AddDays(-((DateTime.UtcNow.Date - cd.Date).Days + 1));
+                return DateTimeOffset.Parse(tsStr.Remove(0, 4), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).AddDays(-((DateTime.UtcNow.Date - cd.Date).Days + 1));
             }
 
             if (Regex.IsMatch(m.Groups[1].Value, @"Mon|Tue|Wed|Thu|Fri|Sat|Sun"))
@@ -166,7 +166,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 dt = dt.AddHours(int.Parse(m.Groups[4].Value) + (m.Groups[6].Value == "PM" ? 12 : 0));
                 dt = dt.AddMinutes(int.Parse(m.Groups[5].Value));
 
-                return dt;
+                return new DateTimeOffset(dt, TimeSpan.Zero);
             }
 
             var yy = string.IsNullOrEmpty(m.Groups[3].Value) ? "" : "yy ";
