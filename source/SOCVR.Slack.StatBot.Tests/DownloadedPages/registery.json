@@ -78,7 +78,7 @@
     "AuthorDisplayName": "gunr2171",
     "AuthorId": 1043380,
     "CurrentMarkdownContent": "http://stackoverflow.com/questions/35965613/display-iframe-in-ijulia-jupyter-notebook",
-    "CurrentText": "http://stackoverflow.com/questions/35965613/display-iframe-in-ijulia-jupyter-notebook",
+    "CurrentText": "0Q: Display IFrame in IJulia Jupyter NotebookIs there a way to display an IFrame in an IJulia Jupyter notebook?\n\nI am trying to use Plotly.jl with Jupyter.  When plot is called it returns a URL linking to the generated graph.\n\nUsing an IFrame should allow this to work out.\n\nPlotly.plot([\"z\"=>rand(6,6)],[\"style\"=>[\"type\"=>\"heatmap\"]])\n\nhttps...julia-lang jupyter ijulia-notebook",
     "IsCloseVoteRequest": false,
     "MessageId": 29310780,
     "RawOneboxName": "ob-post",

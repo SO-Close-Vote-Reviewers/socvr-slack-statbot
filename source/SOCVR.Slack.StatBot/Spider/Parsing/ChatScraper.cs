@@ -112,13 +112,11 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
             extractedMessageData.StarCount = GetStarsOrPins(historyPageHtml);
             extractedMessageData.Revisions = GetRevisions(historyPageHtml);
-            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Html();//.Text().Trim();
+            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
             extractedMessageData.CurrentMarkdownContent = extractedMessageData.Revisions[0].MessageMarkDown;
             extractedMessageData.InitialRevisionTs = GetInitialTimestamp(historyPageHtml, currentDate);
 
             // Bot-specific message meta data.
-            extractedMessageData.TagsCount = currentVersionMessageHtml.Find(".ob-post-tag").Count();
-            extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
             extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
             extractedMessageData.RawOneboxName = currentVersionMessageHtml
                 .Find(".content")
@@ -127,6 +125,11 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 ?.Classes
                 ?.Last();
 
+            if (string.IsNullOrEmpty(extractedMessageData.RawOneboxName))
+            {
+                extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml[".content a"].Count();
+                extractedMessageData.TagsCount = currentVersionMessageHtml[".ob-post-tag"].Count();
+            }
 
             return extractedMessageData;
         }
