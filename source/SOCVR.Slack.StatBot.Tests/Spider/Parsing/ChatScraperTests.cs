@@ -174,7 +174,7 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
                 if (typeof(TExpected) == typeof(DateTimeOffset))
                 {
                     var valueRaw = data[expectedKey].Value<string>();
-                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw, CultureInfo.InvariantCulture).ToUniversalTime();
+                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
                 }
                 else
                 {
