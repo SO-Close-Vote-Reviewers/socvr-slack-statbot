@@ -8,6 +8,7 @@ using SOCVR.Slack.StatBot.Spider.Parsing;
 using SOCVR.Slack.StatBot.Tests.Spider.Download;
 using SOCVR.Slack.StatBot.Tests.DownloadedPages;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
 
 namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
 {
@@ -173,7 +174,7 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
                 if (typeof(TExpected) == typeof(DateTimeOffset))
                 {
                     var valueRaw = data[expectedKey].Value<string>();
-                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw);
+                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw, CultureInfo.InvariantCulture).ToUniversalTime();
                 }
                 else
                 {
