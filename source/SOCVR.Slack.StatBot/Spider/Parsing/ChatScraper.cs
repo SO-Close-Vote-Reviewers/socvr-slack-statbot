@@ -127,14 +127,14 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
             if (string.IsNullOrEmpty(extractedMessageData.RawOneboxName))
             {
-                extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml[".content a"].Count();
+                extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml[".content a"].Count(e => e.ChildElements.Count() == 0);
                 extractedMessageData.TagsCount = currentVersionMessageHtml[".ob-post-tag"].Count();
             }
 
             return extractedMessageData;
         }
 
-        private DateTime GetInitialTimestamp(CQ dom, DateTimeOffset cd)
+        private DateTimeOffset GetInitialTimestamp(CQ dom, DateTimeOffset cd)
         {
             var tsStr = dom[".monologue .timestamp"].Last().Text();
             var m = Regex.Match(tsStr, @"^([A-Za-z]{3,3} )?(\d+ )?('\d+ )?(\d+):(\d+) (AM|PM)$");
@@ -174,7 +174,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             var h = m.Groups[4].Length == 2 ? "h" : "";
             var pattern = $"MMM {dd} {yy}{h}h:mm tt";
 
-            return DateTime.ParseExact(tsStr.Replace("'", ""), pattern, CultureInfo.InvariantCulture);
+            return DateTimeOffset.ParseExact(tsStr.Replace("'", ""), pattern, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
         }
 
         private List<ParsedMessageRevision> GetRevisions(CQ dom)
