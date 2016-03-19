@@ -167,8 +167,9 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             }
 
             var yy = string.IsNullOrEmpty(m.Groups[3].Value) ? "" : "yy ";
+            var dd = m.Groups[2].Length - 1 == 2 ? "dd" : "d";
             var h = m.Groups[4].Length == 2 ? "h" : "";
-            var pattern = $"MMM dd {yy}{h}h:mm tt";
+            var pattern = $"MMM {dd} {yy}{h}h:mm tt";
 
             return DateTime.ParseExact(tsStr.Replace("'", ""), pattern, CultureInfo.InvariantCulture);
         }
