@@ -28,8 +28,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
     {
         public int AuthorId { get; set; }
         public string DisplayName { get; set; }
-        //public string MessageHtml { get; set; }
-        public string MessageText { get; set; }
+        public string MessageMarkDown { get; set; }
         public int RevisionNumber { get; set; }
     }
 }

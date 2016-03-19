@@ -80,75 +80,75 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
         }
 
         [TestCaseSource("Generate_ParseMessage_AuthorDisplayName")]
-        public void ParseMessage_AuthorDisplayName(int messageId, int roomId, string expectedAuthorDisplayName)
+        public void ParseMessage_AuthorDisplayName(int messageId, int roomId, DateTimeOffset sipderDate, string expectedAuthorDisplayName)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedAuthorDisplayName, (x) => x.AuthorDisplayName);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedAuthorDisplayName, (x) => x.AuthorDisplayName);
         }
 
         [TestCaseSource("Generate_ParseMessage_AuthorId")]
-        public void ParseMessage_AuthorId(int messageId, int roomId, int expectedAuthorId)
+        public void ParseMessage_AuthorId(int messageId, int roomId, DateTimeOffset sipderDate, int expectedAuthorId)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedAuthorId, (x) => x.AuthorId);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedAuthorId, (x) => x.AuthorId);
         }
 
         [TestCaseSource("Generate_ParseMessage_CurrentMarkdownContent")]
-        public void ParseMessage_CurrentMarkdownContent(int messageId, int roomId, string expectedValue)
+        public void ParseMessage_CurrentMarkdownContent(int messageId, int roomId, DateTimeOffset sipderDate, string expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.CurrentMarkdownContent);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.CurrentMarkdownContent);
         }
 
         [TestCaseSource("Generate_ParseMessage_CurrentText")]
-        public void ParseMessage_CurrentText(int messageId, int roomId, string expectedCurrentText)
+        public void ParseMessage_CurrentText(int messageId, int roomId, DateTimeOffset sipderDate, string expectedCurrentText)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedCurrentText, (x) => x.CurrentText);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedCurrentText, (x) => x.CurrentText);
         }
 
         [TestCaseSource("Generate_ParseMessage_InitialRevisionTs")]
-        public void ParseMessage_InitialRevisionTs(int messageId, int roomId, DateTimeOffset expectedValue)
+        public void ParseMessage_InitialRevisionTs(int messageId, int roomId, DateTimeOffset sipderDate, DateTimeOffset expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.InitialRevisionTs);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.InitialRevisionTs);
         }
 
         [TestCaseSource("Generate_ParseMessage_IsCloseVoteRequest")]
-        public void ParseMessage_IsCloseVoteRequest(int messageId, int roomId, bool expectedValue)
+        public void ParseMessage_IsCloseVoteRequest(int messageId, int roomId, DateTimeOffset sipderDate, bool expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.IsCloseVoteRequest);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.IsCloseVoteRequest);
         }
 
         [TestCaseSource("Generate_ParseMessage_MessageId")]
-        public void ParseMessage_MessageId(int messageId, int roomId, int expectedValue)
+        public void ParseMessage_MessageId(int messageId, int roomId, DateTimeOffset sipderDate, int expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.MessageId);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.MessageId);
         }
 
         [TestCaseSource("Generate_ParseMessage_PlainTextLinkCount")]
-        public void ParseMessage_PlainTextLinkCount(int messageId, int roomId, int expectedValue)
+        public void ParseMessage_PlainTextLinkCount(int messageId, int roomId, DateTimeOffset sipderDate, int expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.PlainTextLinkCount);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.PlainTextLinkCount);
         }
 
         [TestCaseSource("Generate_ParseMessage_RawOneBoxName")]
-        public void ParseMessage_RawOneBoxName(int messageId, int roomId, string expectedValue)
+        public void ParseMessage_RawOneBoxName(int messageId, int roomId, DateTimeOffset sipderDate, string expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.RawOneboxName);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.RawOneboxName);
         }
 
         [TestCaseSource("Generate_ParseMessage_RoomId")]
-        public void ParseMessage_RoomId(int messageId, int roomId, int expectedValue)
+        public void ParseMessage_RoomId(int messageId, int roomId, DateTimeOffset sipderDate, int expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.RoomId);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.RoomId);
         }
 
         [TestCaseSource("Generate_ParseMessage_StarCount")]
-        public void ParseMessage_StarCount(int messageId, int roomId, int expectedValue)
+        public void ParseMessage_StarCount(int messageId, int roomId, DateTimeOffset sipderDate, int expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.StarCount);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.StarCount);
         }
 
         [TestCaseSource("Generate_ParseMessage_TagsCount")]
-        public void ParseMessage_TagsCount(int messageId, int roomId, int expectedValue)
+        public void ParseMessage_TagsCount(int messageId, int roomId, DateTimeOffset sipderDate, int expectedValue)
         {
-            TestParseMessageReturnData(messageId, roomId, expectedValue, (x) => x.TagsCount);
+            TestParseMessageReturnData(messageId, roomId, sipderDate, expectedValue, (x) => x.TagsCount);
         }
 
         [SetUp]
@@ -168,6 +168,7 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
 
                 var parsedMessageId = data["MessageId"].Value<int>();
                 var parsedRoomId = data["RoomId"].Value<int>();
+                var parsedSpiderDate = (DateTimeOffset)data["SpiderDate"].Value<DateTime>();
 
                 TExpected parsedValue;
 
@@ -181,13 +182,13 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
                     parsedValue = data[expectedKey].Value<TExpected>();
                 }
 
-                yield return new TestCaseData(parsedMessageId, parsedRoomId, parsedValue);
+                yield return new TestCaseData(parsedMessageId, parsedRoomId, parsedSpiderDate, parsedValue);
             }
         }
 
-        private void TestParseMessageReturnData<TActual>(int messageId, int roomId, TActual expected, Func<ParsedMessageData, TActual> getActual)
+        private void TestParseMessageReturnData<TActual>(int messageId, int roomId, DateTimeOffset spiderDate, TActual expected, Func<ParsedMessageData, TActual> getActual)
         {
-            var parsedData = cs.ParseMessage(messageId, roomId);
+            var parsedData = cs.ParseMessage(messageId, roomId, spiderDate);
             var actual = getActual(parsedData);
             Assert.AreEqual(expected, actual);
         }

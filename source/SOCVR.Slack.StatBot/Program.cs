@@ -20,8 +20,8 @@ namespace SOCVR.Slack.StatBot
         {
             //testing
 
-            var cs = new ChatScraper(new WebClientDownloader());
-            var data = cs.ParseMessage(29290954, 41570);
+            //var cs = new ChatScraper(new WebClientDownloader());
+            //var data = cs.ParseMessage(29290954, 41570);
 
             //end testing
 

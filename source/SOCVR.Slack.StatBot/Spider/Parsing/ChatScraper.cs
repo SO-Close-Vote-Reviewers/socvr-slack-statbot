@@ -94,7 +94,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
         /// Parse the message and save info to the database.
         /// </summary>
         /// <param name="messageId"></param>
-        public ParsedMessageData ParseMessage(int messageId, int roomId)
+        public ParsedMessageData ParseMessage(int messageId, int roomId, DateTimeOffset currentDate)
         {
             //get the history page
             var historyUrl = new StackOverflowChatMessageHistoryUrl(downloader, messageId);
@@ -112,11 +112,12 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             extractedMessageData.AuthorDisplayName = currentVersionMonologue.Find(".signature .username a").Attr("title");
             extractedMessageData.StarCount = GetStarsOrPins(historyPageHtml);
             extractedMessageData.Revisions = GetRevisions(historyPageHtml);
-            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Text().Trim();
-            extractedMessageData.CurrentMarkdownContent = extractedMessageData.Revisions.Last().MessageText;
-            extractedMessageData.InitialRevisionTs = GetInitialTimestamp(historyPageHtml);
+            extractedMessageData.CurrentText = currentVersionMessageHtml.Find(".content").Html();//.Text().Trim();
+            extractedMessageData.CurrentMarkdownContent = extractedMessageData.Revisions[0].MessageMarkDown;
+            extractedMessageData.InitialRevisionTs = GetInitialTimestamp(historyPageHtml, currentDate);
 
             // Bot-specific message meta data.
+            extractedMessageData.TagsCount = currentVersionMessageHtml.Find(".ob-post-tag").Count();
             extractedMessageData.PlainTextLinkCount = currentVersionMessageHtml.Find(".content").Children("a").Count();
             extractedMessageData.IsCloseVoteRequest = DetermineIfMessageIsCloseVoteRequest(currentVersionMessageHtml);
             extractedMessageData.RawOneboxName = currentVersionMessageHtml
@@ -126,12 +127,11 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                 ?.Classes
                 ?.Last();
 
-            //extractedMessageData.TagsCount
 
             return extractedMessageData;
         }
 
-        private DateTime GetInitialTimestamp(CQ dom)
+        private DateTime GetInitialTimestamp(CQ dom, DateTimeOffset cd)
         {
             var tsStr = dom[".monologue .timestamp"].Last().Text();
             var m = Regex.Match(tsStr, @"^([A-Za-z]{3,3} )?(\d+ )?('\d+ )?(\d+):(\d+) (AM|PM)$");
@@ -143,17 +143,17 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
             if (string.IsNullOrEmpty(m.Groups[1].Value))
             {
-                return DateTime.Parse(tsStr);
+                return DateTime.Parse(tsStr).AddDays(-((DateTime.UtcNow.Date - cd.Date).Days));
             }
 
             if (m.Groups[1].Value.Trim() == "yst")
             {
-                return DateTime.Parse(tsStr.Remove(0, 4)).AddDays(-1);
+                return DateTime.Parse(tsStr.Remove(0, 4)).AddDays(-((DateTime.UtcNow.Date - cd.Date).Days + 1));
             }
 
             if (Regex.IsMatch(m.Groups[1].Value, @"Mon|Tue|Wed|Thu|Fri|Sat|Sun"))
             {
-                var dt = DateTime.UtcNow.Date;
+                var dt = cd.ToUniversalTime().Date;
                 for (var i = 0; i < 7; i++)
                 {
                     dt = dt.AddDays(-1);
@@ -188,10 +188,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
                     RevisionNumber = (revsDom.Length - 1) - i, // 0-based index.
                     AuthorId = revsDom[i].Classes.Last().Replace("user-", "").Parse<int>(),
                     DisplayName = revDom.Find(".signature .username a").Attr("title"),
-                    MessageText = RemoveSaidEdited(revDom.Find(".content").Text(), true),
-
-                    //TODO: There's no difference in output between this and the line above.
-                    //MessageHtml = RemoveSaidEdited(revDom.Find(".content").Html(), false)
+                    MessageMarkDown = RemoveSaidEdited(revDom.Find(".content").Text(), false)
                 });
             }
 
@@ -200,30 +197,32 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
         private static string RemoveSaidEdited(string t, bool html)
         {
+            var str = t.Trim();
+
             if (html)
             {
-                if (t.StartsWith("<b>said:</b>"))
+                if (str.StartsWith("<b>said:</b>"))
                 {
-                    return t.Remove(0, 13);
+                    return str.Remove(0, 13);
                 }
-                if (t.StartsWith("<b>edited:</b>"))
+                if (str.StartsWith("<b>edited:</b>"))
                 {
-                    return t.Remove(0, 15);
+                    return str.Remove(0, 15);
                 }
             }
             else
             {
-                if (t.StartsWith("said:"))
+                if (str.StartsWith("said:"))
                 {
-                    return t.Remove(0, 6);
+                    return str.Remove(0, 6);
                 }
-                if (t.StartsWith("edited:"))
+                if (str.StartsWith("edited:"))
                 {
-                    return t.Remove(0, 8);
+                    return str.Remove(0, 8);
                 }
             }
 
-            return t;
+            return str;
         }
 
         private int GetStarsOrPins(CQ dom, bool stars = true)
