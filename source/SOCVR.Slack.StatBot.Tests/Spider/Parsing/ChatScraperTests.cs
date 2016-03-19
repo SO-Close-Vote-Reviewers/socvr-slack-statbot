@@ -164,7 +164,23 @@ namespace SOCVR.Slack.StatBot.Tests.Spider.Parsing
             foreach (var messageId in RegisteryAccessor.GetMessageIds(dir))
             {
                 var data = RegisteryAccessor.GetRegisteryDataForMessage(dir, messageId);
-                yield return new TestCaseData(data["MessageId"].Value<int>(), data["RoomId"].Value<int>(), data[expectedKey].Value<TExpected>());
+
+                var parsedMessageId = data["MessageId"].Value<int>();
+                var parsedRoomId = data["RoomId"].Value<int>();
+
+                TExpected parsedValue;
+
+                if (typeof(TExpected) == typeof(DateTimeOffset))
+                {
+                    var valueRaw = data[expectedKey].Value<string>();
+                    parsedValue = (dynamic)DateTimeOffset.Parse(valueRaw);
+                }
+                else
+                {
+                    parsedValue = data[expectedKey].Value<TExpected>();
+                }
+
+                yield return new TestCaseData(parsedMessageId, parsedRoomId, parsedValue);
             }
         }
 
