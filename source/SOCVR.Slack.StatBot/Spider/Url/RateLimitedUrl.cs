@@ -40,6 +40,7 @@ namespace SOCVR.Slack.StatBot.Spider.Url
                     Thread.Sleep((int)milisecondsToWait);
                 }
 
+                lastFetchTime = DateTimeOffset.Now;
                 return downloader.DownloadHtml(Url);
             }
         }
