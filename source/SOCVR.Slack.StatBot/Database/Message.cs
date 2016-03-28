@@ -17,7 +17,8 @@ namespace SOCVR.Slack.StatBot.Database
         /// The user (by display name) who posted the message.
         /// </summary>
         public UserAlias Author { get; set; }
-        public int AuthorId { get; set; }
+        public string AuthorDisplayName { get; set; }
+        public int AuthorProfileId { get; set; }
 
         /// <summary>
         /// The room this message was posted in.
@@ -33,7 +34,7 @@ namespace SOCVR.Slack.StatBot.Database
         /// <summary>
         /// The html of the latest revision of the message.
         /// </summary>
-        public string CurrentHtmlContent { get; set; }
+        public string CurrentMarkdownContent { get; set; }
 
         /// <summary>
         /// The date and time of the initial message posting.

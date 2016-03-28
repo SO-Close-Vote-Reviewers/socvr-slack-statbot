@@ -9,8 +9,8 @@
     </AssociationLine>
     <AssociationLine Name="OneboxType" Type="SOCVR.Slack.StatBot.Database.OneboxType" FixedFromPoint="true">
       <Path>
-        <Point X="2.75" Y="3.658" />
-        <Point X="9.5" Y="3.658" />
+        <Point X="2.75" Y="3.754" />
+        <Point X="9.5" Y="3.754" />
       </Path>
     </AssociationLine>
     <AssociationLine Name="MessageRevisions" Type="SOCVR.Slack.StatBot.Database.MessageRevision">
@@ -19,7 +19,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAgAACAAAIAAARgBAAACAEAAAAAEQEABAAAgAAAAA=</HashCode>
+      <HashCode>AAAAgAACAAAIAAABghAAACAEAAAQAEQEAAAAAgEAAAA=</HashCode>
       <FileName>Database\Message.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

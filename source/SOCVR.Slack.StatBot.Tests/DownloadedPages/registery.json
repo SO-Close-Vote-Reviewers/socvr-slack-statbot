@@ -160,5 +160,23 @@
     "TagsCount": 0,
     "InitialRevisionTs": "2016-01-02T00:03:00.0+00:00",
     "SpiderDate": "2016-03-13T21:34:29.0+00:00"
+  },
+  {
+    "Type": "Message",
+    "Url": "http://chat.stackoverflow.com/messages/25216467/history",
+    "FilePath": "DownloadedPages\\MessageHistory\\25216467.html",
+    "AuthorDisplayName": "Shadow Wizard",
+    "AuthorId": 447356,
+    "CurrentMarkdownContent": "bon appetite! Share with everyone here ;)",
+    "CurrentText": "bon appetite! Share with everyone here ;)",
+    "IsCloseVoteRequest": false,
+    "MessageId": 25216467,
+    "RawOneboxName": null,
+    "PlainTextLinkCount": 0,
+    "RoomId": 41570,
+    "StarCount": 0,
+    "TagsCount": 0,
+    "InitialRevisionTs": "2015-08-20T20:19:00.0+00:00",
+    "SpiderDate": "2016-03-28T17:14:00.0+00:00"
   }
 ]

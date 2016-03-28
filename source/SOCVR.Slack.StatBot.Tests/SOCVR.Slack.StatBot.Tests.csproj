@@ -69,6 +69,9 @@
     <Content Include="DownloadedPages\MessageHistory\21978883.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="DownloadedPages\MessageHistory\25216467.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="DownloadedPages\MessageHistory\27862166.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -82,6 +85,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
+    <Content Include="DownloadedPages\MessageHistory\29310780.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="DownloadedPages\MessageHistory\29333825.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

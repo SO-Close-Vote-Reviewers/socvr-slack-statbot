@@ -195,9 +195,9 @@
     <Compile Include="Frontend\Responders\DayStatsResponder.cs" />
     <Compile Include="Frontend\Responders\HelpResponder.cs" />
     <Compile Include="Frontend\UserDayStats.cs" />
-    <Compile Include="Migrations\20160328150618_InitialMigration.cs" />
-    <Compile Include="Migrations\20160328150618_InitialMigration.designer.cs">
-      <DependentUpon>20160328150618_InitialMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20160328160443_InitialMigration.cs" />
+    <Compile Include="Migrations\20160328160443_InitialMigration.designer.cs">
+      <DependentUpon>20160328160443_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MessageStorageModelSnapshot.cs" />
     <Compile Include="Program.cs" />
@@ -207,6 +207,7 @@
     <Compile Include="Spider\Parsing\ChatScraper.cs" />
     <Compile Include="Spider\Download\IHtmlDownloader.cs" />
     <Compile Include="Spider\Parsing\ParsedMessageData.cs" />
+    <Compile Include="Spider\Parsing\ParsedRoomData.cs" />
     <Compile Include="Spider\Url\RateLimitedUrl.cs" />
     <Compile Include="Spider\Url\StackOverflowChatMessageHistoryUrl.cs" />
     <Compile Include="Spider\Url\StackOverflowChatProfileUrl.cs" />

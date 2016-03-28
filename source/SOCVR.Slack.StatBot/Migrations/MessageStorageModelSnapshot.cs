@@ -20,9 +20,11 @@ namespace SOCVR.Slack.StatBot.Migrations
                 {
                     b.Property<long>("MessageId");
 
-                    b.Property<int>("AuthorId");
+                    b.Property<string>("AuthorDisplayName");
 
-                    b.Property<string>("CurrentHtmlContent");
+                    b.Property<int>("AuthorProfileId");
+
+                    b.Property<string>("CurrentMarkdownContent");
 
                     b.Property<string>("CurrentText");
 
@@ -102,21 +104,18 @@ namespace SOCVR.Slack.StatBot.Migrations
 
                     b.Property<string>("DisplayName");
 
-                    b.Property<int>("AuthorId");
-
                     b.HasKey("UserId", "DisplayName");
                 });
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.Message", b =>
                 {
-                    b.HasOne("SOCVR.Slack.StatBot.Database.UserAlias")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .HasPrincipalKey("AuthorId");
-
                     b.HasOne("SOCVR.Slack.StatBot.Database.Room")
                         .WithMany()
                         .HasForeignKey("RoomId");
+
+                    b.HasOne("SOCVR.Slack.StatBot.Database.UserAlias")
+                        .WithMany()
+                        .HasForeignKey("AuthorProfileId", "AuthorDisplayName");
                 });
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.MessageRevision", b =>

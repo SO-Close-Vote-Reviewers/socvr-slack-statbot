@@ -22,6 +22,116 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             this.downloader = downloader;
         }
 
+        public void ParseAllChatMessages()
+        {
+            var roomIdsToParse = new[] { 41570, 90230 };
+
+            using (var db = new MessageStorage())
+            {
+                foreach (var roomId in roomIdsToParse)
+                {
+                    //add the room if it doesn't exist
+                    if (!db.Rooms.Any(x => x.RoomId == roomId))
+                    {
+                        var roomData = GetRoomData(roomId);
+                        db.Rooms.Add(new Room
+                        {
+                            RoomId = roomData.RoomId,
+                            Description = roomData.Description,
+                            Name = roomData.Name
+                        });
+                        db.SaveChanges();
+                    }
+
+                    foreach (var date in DetermineDatesToParse(roomId))
+                    {
+                        foreach (var messageId in GetMessageIdsOnTranscriptPage(roomId, date))
+                        {
+                            Console.WriteLine($"{roomId} {date:yyyy-MM-dd} {messageId}");
+                            var parsedInformation = ParseMessage(messageId, roomId, DateTime.Now);
+                            SendParsedMessageDataToDatabase(parsedInformation);
+                        }
+
+                        //add to the database that we've parsed this page
+                        db.ParsedTranscriptPages.Add(new ParsedTranscriptPage
+                        {
+                            Date = date,
+                            RoomId = roomId,
+                        });
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        private void SendParsedMessageDataToDatabase(ParsedMessageData messageData)
+        {
+            using (var db = new MessageStorage())
+            {
+                //if both the username and user id are empty, this is a deleted user. Just move on
+                if (messageData.AuthorDisplayName == null && messageData.AuthorId == 0)
+                {
+                    return;
+                }
+
+                //check if this message was already added to the db
+                if (db.Messages.Any(x => x.MessageId == messageData.MessageId))
+                {
+                    return;
+                }
+
+                var dbMessage = new Message();
+
+                //check if the author exists
+                if (!db.Users.Any(x => x.ProfileId == messageData.AuthorId))
+                {
+                    db.Users.Add(new User
+                    {
+                        ProfileId = messageData.AuthorId,
+                        JoinedChatSystemAt = DateTimeOffset.Now, //will change later
+                        JoinedStackOverflowAt = DateTimeOffset.Now
+                    });
+                    db.SaveChanges();
+                }
+
+                //check if user alias exists
+                if (!db.UserAliases.Any(x => x.UserId == messageData.AuthorId && x.DisplayName == messageData.AuthorDisplayName))
+                {
+                    db.UserAliases.Add(new UserAlias
+                    {
+                        UserId = messageData.AuthorId,
+                        DisplayName = messageData.AuthorDisplayName
+                    });
+                    db.SaveChanges();
+                }
+
+                dbMessage.Author = db.UserAliases
+                    .Where(x => x.UserId == messageData.AuthorId)
+                    .Where(x => x.DisplayName == messageData.AuthorDisplayName)
+                    .Single();
+
+                dbMessage.CurrentMarkdownContent = messageData.CurrentMarkdownContent;
+                dbMessage.CurrentText = messageData.CurrentText;
+                dbMessage.InitialRevisionTs = messageData.InitialRevisionTs;
+                dbMessage.IsCloseVoteRequest = messageData.IsCloseVoteRequest;
+                dbMessage.MessageId = messageData.MessageId;
+
+                //dbMessage.MessageRevisions =
+
+                dbMessage.OneboxType = Enum.GetValues(typeof(OneboxType))
+                    .OfType<OneboxType?>()
+                    .SingleOrDefault(x => x.ToString() == messageData.RawOneboxName);
+
+                dbMessage.PlainTextLinkCount = messageData.PlainTextLinkCount;
+                dbMessage.RoomId = messageData.RoomId;
+                dbMessage.StarCount = messageData.StarCount;
+                dbMessage.Tags = messageData.TagsCount;
+
+                db.Messages.Add(dbMessage);
+                db.SaveChanges();
+            }
+        }
+
         /// <summary>
         /// Returns a collection of dates between and including a start and endpoint.
         /// </summary>
@@ -47,7 +157,7 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
         private IEnumerable<DateTime> DetermineDatesToParse(int roomId)
         {
-            var chatFirstDay = new DateTime(2013, 01, 01); //change this value
+            var chatFirstDay = new DateTime(2013, 11, 19); //change this value
 
             var allDays = EnumDatesInRange(chatFirstDay, DateTimeOffset.UtcNow.Date);
 
@@ -63,32 +173,23 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             }
         }
 
-        //public void ParseTranscriptPage(StackOverflowChatTranscriptUrl url)
-        //{
-        //    var documentHtml = url.DownloadHtml();
-        //    var parsedDoc = CQ.Create(documentHtml);
+        private IEnumerable<int> GetMessageIdsOnTranscriptPage(int roomId, DateTime date)
+        {
+            var transcriptUrl = new StackOverflowChatTranscriptUrl(downloader, roomId, date);
+            var html = CQ.Create(transcriptUrl.DownloadHtml());
 
-        //    using (var db = new MessageStorage())
-        //    {
-        //        var monologues = parsedDoc.Find("#transcript > .monologue");
+            var messageNodes = html["#main #transcript .monologue .messages .message"];
 
-        //        foreach (var monologue in monologues)
-        //        {
-        //            foreach (var message in monologue.Cq().Find(".messages .message"))
-        //            {
-        //                var messageId = message.Attributes["id"].Replace("message-", "").Parse<int>();
+            foreach (var messageNode in messageNodes)
+            {
+                var messageIdRaw = messageNode.Id;
+                var messageId = messageIdRaw
+                    .Replace("message-", "")
+                    .Parse<int>();
 
-        //                //have we already parsed this message?
-        //                var messageAlreadyParsed = db.Messages.Any(x => x.MessageId == messageId);
-
-        //                if (!messageAlreadyParsed)
-        //                {
-        //                    ParseMessage(messageId, url);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+                yield return messageId;
+            }
+        }
 
         /// <summary>
         /// Parse the message and save info to the database.
@@ -246,18 +347,18 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
             }
         }
 
-        //private Room GetRoomData(int roomId)
-        //{
-        //    var roomUrl = new StackOverflowChatRoomInfoUrl(roomId);
-        //    var roomHtml = CQ.Create(roomUrl.DownloadHtml());
+        private ParsedRoomData GetRoomData(int roomId)
+        {
+            var roomUrl = new StackOverflowChatRoomInfoUrl(downloader, roomId);
+            var roomHtml = CQ.Create(roomUrl.DownloadHtml());
 
-        //    var room = new Room();
-        //    room.RoomId = roomId;
-        //    room.Description = roomHtml.Find($"#room-{roomId} p").First().Text();
-        //    room.Name = roomHtml.Find($"#room-{roomId} h1").First().Text();
+            var room = new ParsedRoomData();
+            room.RoomId = roomId;
+            room.Description = roomHtml.Find($"#room-{roomId} p").First().Text();
+            room.Name = roomHtml.Find($"#room-{roomId} h1").First().Text();
 
-        //    return room;
-        //}
+            return room;
+        }
 
         private OneboxType? GetOneboxTypeForMessage(CQ messageHtml)
         {
@@ -363,43 +464,5 @@ namespace SOCVR.Slack.StatBot.Spider.Parsing
 
             return hasTriggerPhrase && hasLink;
         }
-
-        //private string CreateTranscriptUrl(int roomId, DateTime date)
-        //{
-        //    return CreateTranscriptUrl(roomId, date, 0, 24);
-        //}
-
-        //private string CreateTranscriptUrl(int roomId, DateTime date, int startHour, int endHour)
-        //{
-        //    // Do some error checking.
-
-        //    // Date given is in the future.
-        //    if (date.Date > DateTimeOffset.UtcNow.Date)
-        //    {
-        //        throw new ArgumentException("Date is in the future.");
-        //    }
-
-        //    if (startHour > endHour)
-        //    {
-        //        throw new ArgumentException("Start hour is after the end hour.");
-        //    }
-
-        //    var baseUrl = new Uri("http://chat.stackoverflow.com/transcript/");
-
-        //    var roomAndDateSection = new int[]
-        //    {
-        //         roomId,
-        //         date.Year,
-        //         date.Month,
-        //         date.Day
-        //    }.ToCSV("/") + "/";
-
-        //    //add in the room and date info
-        //    var url = new Uri(baseUrl, roomAndDateSection);
-
-        //    //add in the start and end time info
-        //    url = new Uri(url, $"{startHour}-{endHour}");
-        //    return url.ToString();
-        //}
     }
 }

@@ -33,6 +33,13 @@ namespace SOCVR.Slack.StatBot
                 Console.WriteLine("Database up to date.");
             }
 
+            var cs = new ChatScraper(new WebClientDownloader());
+            cs.ParseAllChatMessages();
+
+
+
+            return;
+
             var botAPIKey = SettingsAccessor.GetSetting<string>("SlackBotAPIKey");
 
             bot.Aliases = new List<string>() { "sc" };

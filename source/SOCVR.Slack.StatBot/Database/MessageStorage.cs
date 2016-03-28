@@ -47,7 +47,7 @@ namespace SOCVR.Slack.StatBot.Database
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Author)
                 .WithMany(a => a.Messages)
-                .HasForeignKey(m => m.AuthorId);
+                .HasForeignKey(m => new { m.AuthorProfileId, m.AuthorDisplayName });
 
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Room)
@@ -123,7 +123,7 @@ namespace SOCVR.Slack.StatBot.Database
                 .ValueGeneratedNever();
 
             //JoinedChatSystemAt is always going to be a date, but C# doesn't have a good
-            //"date only" data type that is also compatable with EF. DateTimeOffset is going to be
+            //"date only" data type that is also compatible with EF. DateTimeOffset is going to be
             //a bit overkill, but should be fine.
         }
 

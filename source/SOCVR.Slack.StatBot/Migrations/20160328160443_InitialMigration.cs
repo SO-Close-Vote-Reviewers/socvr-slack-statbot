@@ -54,13 +54,11 @@ namespace SOCVR.Slack.StatBot.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false),
-                    DisplayName = table.Column<string>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false)
+                    DisplayName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserAlias", x => new { x.UserId, x.DisplayName });
-                    table.UniqueConstraint("AK_UserAlias_AuthorId", x => x.AuthorId);
                     table.ForeignKey(
                         name: "FK_UserAlias_User_UserId",
                         column: x => x.UserId,
@@ -73,8 +71,9 @@ namespace SOCVR.Slack.StatBot.Migrations
                 columns: table => new
                 {
                     MessageId = table.Column<long>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false),
-                    CurrentHtmlContent = table.Column<string>(nullable: true),
+                    AuthorDisplayName = table.Column<string>(nullable: true),
+                    AuthorProfileId = table.Column<int>(nullable: false),
+                    CurrentMarkdownContent = table.Column<string>(nullable: true),
                     CurrentText = table.Column<string>(nullable: true),
                     InitialRevisionTs = table.Column<DateTimeOffset>(nullable: false),
                     IsCloseVoteRequest = table.Column<bool>(nullable: false),
@@ -88,17 +87,17 @@ namespace SOCVR.Slack.StatBot.Migrations
                 {
                     table.PrimaryKey("PK_Message", x => x.MessageId);
                     table.ForeignKey(
-                        name: "FK_Message_UserAlias_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "UserAlias",
-                        principalColumn: "AuthorId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Message_Room_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Room",
                         principalColumn: "RoomId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Message_UserAlias_AuthorProfileId_AuthorDisplayName",
+                        columns: x => new { x.AuthorProfileId, x.AuthorDisplayName },
+                        principalTable: "UserAlias",
+                        principalColumns: new[] { "UserId", "DisplayName" },
+                        onDelete: ReferentialAction.Restrict);
                 });
             migrationBuilder.CreateTable(
                 name: "MessageRevision",
@@ -135,8 +134,8 @@ namespace SOCVR.Slack.StatBot.Migrations
             migrationBuilder.DropTable("MessageRevision");
             migrationBuilder.DropTable("ParsedTranscriptPage");
             migrationBuilder.DropTable("Message");
-            migrationBuilder.DropTable("UserAlias");
             migrationBuilder.DropTable("Room");
+            migrationBuilder.DropTable("UserAlias");
             migrationBuilder.DropTable("User");
         }
     }
