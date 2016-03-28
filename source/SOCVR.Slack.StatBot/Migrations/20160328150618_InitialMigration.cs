@@ -4,7 +4,7 @@ using Microsoft.Data.Entity.Migrations;
 
 namespace SOCVR.Slack.StatBot.Migrations
 {
-    public partial class InitialMigrations : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -55,14 +55,12 @@ namespace SOCVR.Slack.StatBot.Migrations
                 {
                     UserId = table.Column<int>(nullable: false),
                     DisplayName = table.Column<string>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false),
-                    RevisionAuthorId = table.Column<int>(nullable: false)
+                    AuthorId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserAlias", x => new { x.UserId, x.DisplayName });
                     table.UniqueConstraint("AK_UserAlias_AuthorId", x => x.AuthorId);
-                    table.UniqueConstraint("AK_UserAlias_RevisionAuthorId", x => x.RevisionAuthorId);
                     table.ForeignKey(
                         name: "FK_UserAlias_User_UserId",
                         column: x => x.UserId,
@@ -108,7 +106,9 @@ namespace SOCVR.Slack.StatBot.Migrations
                 {
                     MessageId = table.Column<long>(nullable: false),
                     RevisionNumber = table.Column<int>(nullable: false),
+                    RevisionAuthorDisplayName = table.Column<string>(nullable: true),
                     RevisionAuthorId = table.Column<int>(nullable: false),
+                    RevisionAuthorUserId = table.Column<int>(nullable: true),
                     RevisionMadeAt = table.Column<DateTimeOffset>(nullable: false),
                     Text = table.Column<string>(nullable: false)
                 },
@@ -122,11 +122,11 @@ namespace SOCVR.Slack.StatBot.Migrations
                         principalColumn: "MessageId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MessageRevision_UserAlias_RevisionAuthorId",
-                        column: x => x.RevisionAuthorId,
+                        name: "FK_MessageRevision_UserAlias_RevisionAuthorUserId_RevisionAuthorDisplayName",
+                        columns: x => new { x.RevisionAuthorUserId, x.RevisionAuthorDisplayName },
                         principalTable: "UserAlias",
-                        principalColumn: "RevisionAuthorId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumns: new[] { "UserId", "DisplayName" },
+                        onDelete: ReferentialAction.Restrict);
                 });
         }
 

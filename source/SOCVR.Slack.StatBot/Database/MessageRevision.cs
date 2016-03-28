@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SOCVR.Slack.StatBot.Database
 {
     /// <summary>
-    /// A message revision. The inital posted message is a revision.
+    /// A message revision. The initial posted message is a revision.
     /// </summary>
     class MessageRevision
     {

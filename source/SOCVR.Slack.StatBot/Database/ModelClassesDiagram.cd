@@ -54,15 +54,8 @@
   </Class>
   <Class Name="SOCVR.Slack.StatBot.Database.UserAlias">
     <Position X="4.5" Y="4.25" Width="1.5" />
-    <AssociationLine Name="MessageRevisions" Type="SOCVR.Slack.StatBot.Database.MessageRevision" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="5.688" Y="5.546" />
-        <Point X="5.688" Y="7.532" />
-        <Point X="2.75" Y="7.532" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAABEAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAABEAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>Database\UserAlias.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -70,7 +63,6 @@
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Messages" />
-      <Property Name="MessageRevisions" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="SOCVR.Slack.StatBot.Database.MessageRevision">

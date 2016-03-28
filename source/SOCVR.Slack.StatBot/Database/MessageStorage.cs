@@ -19,7 +19,7 @@ namespace SOCVR.Slack.StatBot.Database
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = SettingsAccessor.GetSetting<string>("ConnectionString");
-            optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -72,10 +72,10 @@ namespace SOCVR.Slack.StatBot.Database
                 .WithMany(m => m.MessageRevisions)
                 .HasForeignKey(m => m.MessageId);
 
-            modelBuilder.Entity<MessageRevision>()
-                .HasOne(mr => mr.RevisionAuthor)
-                .WithMany(a => a.MessageRevisions)
-                .HasForeignKey(mr => mr.RevisionAuthorId);
+            //modelBuilder.Entity<MessageRevision>()
+            //    .HasOne(mr => mr.RevisionAuthor)
+            //    .WithMany(a => a.MessageRevisions)
+            //    .HasForeignKey(mr => mr.RevisionAuthorId);
         }
 
         private static void ConfigureParsedTranscriptPageEntity(ModelBuilder modelBuilder)

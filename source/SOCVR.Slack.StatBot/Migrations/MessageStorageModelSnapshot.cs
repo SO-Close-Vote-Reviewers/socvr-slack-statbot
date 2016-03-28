@@ -13,7 +13,8 @@ namespace SOCVR.Slack.StatBot.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348");
+                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.Message", b =>
                 {
@@ -48,7 +49,11 @@ namespace SOCVR.Slack.StatBot.Migrations
 
                     b.Property<int>("RevisionNumber");
 
+                    b.Property<string>("RevisionAuthorDisplayName");
+
                     b.Property<int>("RevisionAuthorId");
+
+                    b.Property<int?>("RevisionAuthorUserId");
 
                     b.Property<DateTimeOffset>("RevisionMadeAt");
 
@@ -99,8 +104,6 @@ namespace SOCVR.Slack.StatBot.Migrations
 
                     b.Property<int>("AuthorId");
 
-                    b.Property<int>("RevisionAuthorId");
-
                     b.HasKey("UserId", "DisplayName");
                 });
 
@@ -124,8 +127,7 @@ namespace SOCVR.Slack.StatBot.Migrations
 
                     b.HasOne("SOCVR.Slack.StatBot.Database.UserAlias")
                         .WithMany()
-                        .HasForeignKey("RevisionAuthorId")
-                        .HasPrincipalKey("RevisionAuthorId");
+                        .HasForeignKey("RevisionAuthorUserId", "RevisionAuthorDisplayName");
                 });
 
             modelBuilder.Entity("SOCVR.Slack.StatBot.Database.ParsedTranscriptPage", b =>

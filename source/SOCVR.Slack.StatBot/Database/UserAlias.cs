@@ -20,6 +20,6 @@ namespace SOCVR.Slack.StatBot.Database
         public string DisplayName { get; set; }
 
         public virtual List<Message> Messages { get; set; }
-        public virtual List<MessageRevision> MessageRevisions { get; set; }
+        //public virtual List<MessageRevision> MessageRevisions { get; set; }
     }
 }
