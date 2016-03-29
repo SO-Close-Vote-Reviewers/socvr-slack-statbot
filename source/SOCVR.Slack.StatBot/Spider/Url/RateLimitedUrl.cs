@@ -32,7 +32,7 @@ namespace SOCVR.Slack.StatBot.Spider.Url
         {
             lock (downloadLockObject)
             {
-                var nextFetchTime = lastFetchTime.AddMilliseconds(100);
+                var nextFetchTime = lastFetchTime.AddMilliseconds(200);
                 var milisecondsToWait = (nextFetchTime - DateTimeOffset.Now).TotalMilliseconds;
 
                 if (milisecondsToWait > 0)
